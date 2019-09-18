@@ -8,29 +8,76 @@ use AdamRocska\ShippingTier\Utility\DateInterval;
 use AdamRocska\ShippingTier\Utility\DateInterval\Exception\CorruptIntervalSpec;
 use DateInterval as NativeDateInterval;
 
+/**
+ * Wraps a native `DateInterval` object, and represents it as an internal
+ * `DateInterval`
+ *
+ * @package AdamRocska\ShippingTier\Utility\DateInterval
+ * @version Version 1.0.0
+ * @since   Version 1.0.0
+ * @author  Adam Rocska <adam.rocska@adams.solutions>
+ */
 class NativeWrapper implements DateInterval
 {
+    // weeks can be handled as input but not as format output.
+    const INTERVAL_FORMAT_FOR_COPYING = "P"    // "period marker"
+                                        . "%yY" // year
+                                        . "%mM" // months
+                                        . "%dD" // days
+                                        . "T"   // "time marker"
+                                        . "%hH" // hours
+                                        . "%iM" // minutes
+                                        . "%sS"; // seconds;
 
     /**
+     * The `DateInterval` instance being wrapped.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
      * @var NativeDateInterval
      */
     private $nativeDateInterval;
 
     /**
-     * NativeWrapper constructor.
+     * Copies the provided `NativeDateInterval` instance for representation to
+     * avoid unexpected side-effects.
      *
-     * @param NativeDateInterval $nativeDateInterval
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param NativeDateInterval $nativeDateInterval The native date interval
+     *                                               instance to wrap.
+     *
+     * @throws CorruptIntervalSpec Throws a `CorruptIntervalSpec` if
+     *                             `NativeDateTime` copying / instantiation has
+     *                             failed.
      */
     public function __construct(NativeDateInterval $nativeDateInterval)
     {
-        $this->nativeDateInterval = $nativeDateInterval;
+        $this->nativeDateInterval = $this->copyNativeDateInterval(
+            $nativeDateInterval
+        );
     }
 
     /**
-     * @param string $spec
+     * Creates a NativeWrapper instance for a `NativeDateInterval` representing
+     * the provided interval spec.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param string $spec The interval spec to construct a wrapper for.
      *
      * @return NativeWrapper
-     * @throws CorruptIntervalSpec
+     * @throws CorruptIntervalSpec Throws a `CorruptIntervalSpec` if the
+     *                             received interval spec can't be processed by
+     *                             the native `DateInterval` constructor.
+     * @see     https://www.php.net/manual/en/dateinterval.construct.php for
+     *          interval_spec description.
+     *
      */
     public static function createFromIntervalSpec(string $spec): NativeWrapper
     {
@@ -165,30 +212,7 @@ class NativeWrapper implements DateInterval
      */
     public function asNativeDateInterval(): NativeDateInterval
     {
-        // weeks can be handled as input but not as format output.
-        $format = "P";    // "period marker"
-        $format .= "%yY"; // year
-        $format .= "%mM"; // months
-        $format .= "%dD"; // days
-        $format .= "T";   // "time marker"
-        $format .= "%hH"; // hours
-        $format .= "%iM"; // minutes
-        $format .= "%sS"; // seconds
-        try {
-            $dateInterval = new NativeDateInterval(
-                $this->nativeDateInterval->format($format)
-            );
-        } catch (\Exception $exception) {
-            throw new CorruptIntervalSpec(
-                "Native date interval construction failed.",
-                0,
-                $exception
-            );
-        }
-        if ($this->isBackwardInTime()) {
-            $dateInterval->invert = 1;
-        }
-        return $dateInterval;
+        return $this->copyNativeDateInterval($this->nativeDateInterval);
     }
 
     /**
@@ -202,5 +226,33 @@ class NativeWrapper implements DateInterval
     public function getDays(): int
     {
         return $this->nativeDateInterval->d;
+    }
+
+    /**
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param NativeDateInterval $interval
+     *
+     * @return NativeDateInterval
+     * @throws CorruptIntervalSpec
+     */
+    private function copyNativeDateInterval(
+        NativeDateInterval $interval
+    ): NativeDateInterval {
+        try {
+            $intervalCopy         = new NativeDateInterval(
+                $interval->format(static::INTERVAL_FORMAT_FOR_COPYING)
+            );
+            $intervalCopy->invert = $interval->invert;
+            return $intervalCopy;
+        } catch (\Exception $exception) {
+            throw new CorruptIntervalSpec(
+                "Native date interval construction failed.",
+                0,
+                $exception
+            );
+        }
     }
 }

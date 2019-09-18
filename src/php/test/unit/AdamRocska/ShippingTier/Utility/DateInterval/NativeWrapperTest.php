@@ -129,17 +129,92 @@ class NativeWrapperTest extends TestCase
         );
     }
 
-    public function testAsNativeDateInterval_wrapsException(): void
+    /**
+     * @param DateInterval $original
+     *
+     * @dataProvider nativeDateIntervals
+     */
+    public function testIgnoresOriginSideEffect(DateInterval $original): void
+    {
+        $nativeWrapper       = new NativeWrapper($original);
+        $wasOriginalInverted = ($original->invert === 1);
+
+        $original->y      = 1234;
+        $original->m      = 1234;
+        $original->d      = 1234;
+        $original->h      = 1234;
+        $original->i      = 1234;
+        $original->s      = 1234;
+        $original->f      = 123.456;
+        $original->invert = $original->invert === 1 ? 0 : 1;
+
+        $this->assertNotEquals(
+            $original->y,
+            $nativeWrapper->getYears(),
+            "Should return the original years."
+        );
+        $this->assertNotEquals(
+            $original->m,
+            $nativeWrapper->getMonths(),
+            "Should return the original months."
+        );
+        $this->assertNotEquals(
+            $original->d,
+            $nativeWrapper->getDays(),
+            "Should return the original days."
+        );
+        $this->assertNotEquals(
+            $original->h,
+            $nativeWrapper->getHours(),
+            "Should return the original hours."
+        );
+        $this->assertNotEquals(
+            $original->i,
+            $nativeWrapper->getMinutes(),
+            "Should return the original minutes."
+        );
+        $this->assertNotEquals(
+            $original->s,
+            $nativeWrapper->getSeconds(),
+            "Should return the original seconds."
+        );
+        $this->assertNotEquals(
+            $original->f,
+            $nativeWrapper->getMicroseconds(),
+            "Should return the original microseconds."
+        );
+
+        if ($wasOriginalInverted) {
+            $this->assertTrue(
+                $nativeWrapper->isBackwardInTime(),
+                "Should point backward in time."
+            );
+            $this->assertFalse(
+                $nativeWrapper->isForwardInTime(),
+                "Shouldn't point forward in time."
+            );
+        } else {
+            $this->assertTrue(
+                $nativeWrapper->isForwardInTime(),
+                "Shouldn't point backward in time."
+            );
+            $this->assertFalse(
+                $nativeWrapper->isBackwardInTime(),
+                "Should point forward in time."
+            );
+        }
+    }
+
+    public function testConstructor_wrapsException(): void
     {
         /** @var MockObject|DateInterval $mockNativeDateInterval */
         $mockNativeDateInterval = $this->createMock(DateInterval::class);
-        $nativeWrapper          = new NativeWrapper($mockNativeDateInterval);
         $mockNativeDateInterval
             ->method("format")
             ->willReturn("INVALID SPEC");
 
         try {
-            $nativeWrapper->asNativeDateInterval();
+            $nativeWrapper = new NativeWrapper($mockNativeDateInterval);
             $this->fail("Should have thrown an exception.");
         } catch (Exception\CorruptIntervalSpec $exception) {
             $this->assertEquals(
@@ -152,9 +227,7 @@ class NativeWrapperTest extends TestCase
                 "Previous exception message should be bound."
             );
         }
-
     }
-
 
     /**
      * @param string $intervalSpec
@@ -201,6 +274,5 @@ class NativeWrapperTest extends TestCase
         $dateInterval->invert = 1;
         return $dateInterval;
     }
-
 
 }
