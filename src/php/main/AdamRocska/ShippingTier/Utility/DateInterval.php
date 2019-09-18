@@ -40,6 +40,17 @@ interface DateInterval
      */
     public function getMonths(): int;
 
+
+    /**
+     * Returns the number of days in the interval.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     * @return int
+     */
+    public function getDays(): int;
+
     /**
      * Returns the number of hours in the interval.
      *
