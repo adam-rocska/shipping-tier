@@ -20,5 +20,13 @@
         "psr-4": {
             "AdamRocska\\ShippingTier\\": "src/php/main/AdamRocska/ShippingTier"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AdamRocska\\ShippingTier\\": [
+                "src/php/main/AdamRocska/ShippingTier",
+                "src/php/test/unit/AdamRocska/ShippingTier"
+            ]
+        }
     }
 }
