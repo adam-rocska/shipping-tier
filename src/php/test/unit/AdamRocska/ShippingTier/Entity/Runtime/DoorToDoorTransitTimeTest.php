@@ -2,7 +2,10 @@
 
 namespace AdamRocska\ShippingTier\Entity\Runtime;
 
+use AdamRocska\ShippingTier\Entity\DoorToDoorTransitTime as DoorToDoorTransitTimeEntity;
 use AdamRocska\ShippingTier\Entity\Runtime\DoorToDoorTransitTime\Exception\InvalidBoundaries;
+use AdamRocska\ShippingTier\Equatable;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DoorToDoorTransitTimeTest extends TestCase
@@ -71,6 +74,30 @@ class DoorToDoorTransitTimeTest extends TestCase
             $doorToDoorTransitTime->getMaximumDays(),
             "Expected to return maximum days untouched."
         );
+    }
+
+    /**
+     * @throws InvalidBoundaries
+     */
+    public function testEquals_shouldAssertInputType(): void
+    {
+        /** @var MockObject|Equatable $equatableImplementation */
+        $equatableImplementation = $this->createMock(Equatable::class);
+        $doorToDoorTransitTime   = new DoorToDoorTransitTime(1, 2);
+
+        try {
+            $doorToDoorTransitTime->equals($equatableImplementation);
+            $this->fail("Should have thrown an exception.");
+        } catch (Equatable\Exception\UnequatableType $exception) {
+            $expectedMessage = "Object to check equality against is not a/an";
+            $expectedMessage .= DoorToDoorTransitTimeEntity::class;
+            $expectedMessage .= " implementation";
+            $this->assertEquals(
+                $expectedMessage,
+                $exception->getMessage(),
+                "Exception message should be self explanatory."
+            );
+        }
     }
 
 
