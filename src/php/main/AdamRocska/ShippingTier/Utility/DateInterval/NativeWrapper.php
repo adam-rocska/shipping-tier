@@ -6,7 +6,6 @@ namespace AdamRocska\ShippingTier\Utility\DateInterval;
 
 use AdamRocska\ShippingTier\Utility\DateInterval;
 use DateInterval as NativeDateInterval;
-use Exception;
 
 class NativeWrapper implements DateInterval
 {
@@ -24,6 +23,11 @@ class NativeWrapper implements DateInterval
     public function __construct(NativeDateInterval $nativeDateInterval)
     {
         $this->nativeDateInterval = $nativeDateInterval;
+    }
+
+    public static function createFromIntervalSpec(string $spec): NativeWrapper
+    {
+        return new NativeWrapper(new NativeDateInterval($spec));
     }
 
     /**
@@ -140,7 +144,6 @@ class NativeWrapper implements DateInterval
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      * @return NativeDateInterval
-     * @throws Exception
      */
     public function asNativeDateInterval(): NativeDateInterval
     {

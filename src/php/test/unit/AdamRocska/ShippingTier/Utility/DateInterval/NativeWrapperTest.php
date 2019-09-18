@@ -8,26 +8,37 @@ use PHPUnit\Framework\TestCase;
 class NativeWrapperTest extends TestCase
 {
 
-    public function nativeDateIntervals(): iterable
+    const INTERVAL_FORMAT_FOR_TESTING = "Y=%yM=%MD=%DH=%HI=%IS=%SF=%FR=%R";
+
+    public function intervalSpecs(): iterable
     {
         return [
-            [new DateInterval('P2Y4DT6H8M')],
-            [new DateInterval('P2Y4DT6H2M')],
-            [new DateInterval('P2Y5DT6H8M')],
-            [new DateInterval('P2Y5DT6H2M')],
-            [new DateInterval('P2Y4DT1H8M')],
-            [new DateInterval('P2Y4DT1H2M')],
-            [new DateInterval('P2Y5DT1H8M')],
-            [new DateInterval('P2Y5DT1H2M')],
-            [$this->asNegative(new DateInterval('P2Y4DT6H8M'))],
-            [$this->asNegative(new DateInterval('P2Y4DT6H2M'))],
-            [$this->asNegative(new DateInterval('P2Y5DT6H8M'))],
-            [$this->asNegative(new DateInterval('P2Y5DT6H2M'))],
-            [$this->asNegative(new DateInterval('P2Y4DT1H8M'))],
-            [$this->asNegative(new DateInterval('P2Y4DT1H2M'))],
-            [$this->asNegative(new DateInterval('P2Y5DT1H8M'))],
-            [$this->asNegative(new DateInterval('P2Y5DT1H2M'))]
+            ["P2Y4DT6H8M"],
+            ["P2Y4DT6H2M"],
+            ["P2Y5DT6H8M"],
+            ["P2Y5DT6H2M"],
+            ["P2Y4DT1H8M"],
+            ["P2Y4DT1H2M"],
+            ["P2Y5DT1H8M"],
+            ["P2Y5DT1H2M"]
         ];
+    }
+
+    public function nativeDateIntervals(): iterable
+    {
+        $nativeDateIntervals = [];
+        foreach ($this->intervalSpecs() as $intervalSpec) {
+            $nativeDateIntervals[] = [new DateInterval($intervalSpec[0])];
+        }
+        foreach ($this->intervalSpecs() as $intervalSpec) {
+            $nativeDateIntervals[] = [
+                $this->asNegative(
+                    new DateInterval($intervalSpec[0])
+                )
+            ];
+        }
+
+        return $nativeDateIntervals;
     }
 
     /**
@@ -110,10 +121,30 @@ class NativeWrapperTest extends TestCase
             "As Native conversion shouldn't return the same instance, to avoid unintended side-effects."
         );
         $this->assertEquals(
-            $native->format("Y=%yM=%MD=%DH=%HI=%IS=%SF=%FR=%R"),
-            $dateInterval->format("Y=%yM=%MD=%DH=%HI=%IS=%SF=%FR=%R"),
+            $native->format(self::INTERVAL_FORMAT_FOR_TESTING),
+            $dateInterval->format(self::INTERVAL_FORMAT_FOR_TESTING),
             "Conceptually the date intervals should be equal."
         );
+    }
+
+    /**
+     * @param string $intervalSpec
+     *
+     * @dataProvider intervalSpecs
+     */
+    public function testCreateFromIntervalSpec(string $intervalSpec): void
+    {
+        $nativeWrapper = NativeWrapper::createFromIntervalSpec($intervalSpec);
+
+        $expectedInterval = new DateInterval($intervalSpec);
+        $actualInterval   = $nativeWrapper->asNativeDateInterval();
+
+        $this->assertEquals(
+            $expectedInterval->format(static::INTERVAL_FORMAT_FOR_TESTING),
+            $actualInterval->format(static::INTERVAL_FORMAT_FOR_TESTING),
+            "Should create the right instance out of the interval spec."
+        );
+
     }
 
     private function asNegative(DateInterval $dateInterval): DateInterval
@@ -121,5 +152,6 @@ class NativeWrapperTest extends TestCase
         $dateInterval->invert = 1;
         return $dateInterval;
     }
+
 
 }
