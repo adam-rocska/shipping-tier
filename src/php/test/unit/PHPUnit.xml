@@ -13,15 +13,14 @@
             <directory suffix=".php">./../../main</directory>
         </whitelist>
     </filter>
-    <php>
-        <server name="ENVIRONMENT" value="TEST"/>
-        <env name="STATIC_DIRECTORY" value="/test/static/"/>
-        <env name="USER_RESOURCE_DIRECTORY" value="/test/user-resource-directory/"/>
-        <const name="SHOULD_GENERATE_DATASET_MARKDOWN" value="false"/>
-    </php>
     <logging>
-        <log type="coverage-html" target="./../../../../artifact/Test-Coverage/Unit/PHPUnit" lowUpperBound="75"
-             highLowerBound="90"/>
-        <log type="coverage-clover" target="./../../../../artifact/Test-Coverage/Unit/clover.xml"/>
+        <log type="coverage-html"
+             target="./../../../../artifact/Test-Coverage/Unit/PHPUnit"
+             lowUpperBound="75"
+             highLowerBound="90"
+        />
+        <log type="coverage-clover"
+             target="./../../../../artifact/Test-Coverage/Unit/clover.xml"
+        />
     </logging>
 </phpunit>
