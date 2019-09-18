@@ -4,6 +4,9 @@
 namespace AdamRocska\ShippingTier\Entity;
 
 
+use AdamRocska\ShippingTier\Comparable;
+use AdamRocska\ShippingTier\Equatable;
+
 /**
  * Represents a door-to-door transit estimate.
  *
@@ -12,7 +15,7 @@ namespace AdamRocska\ShippingTier\Entity;
  * @since   Version 1.0.0
  * @author  Adam Rocska <adam.rocska@adams.solutions>
  */
-interface DoorToDoorTransitTime
+interface DoorToDoorTransitTime extends Equatable, Comparable
 {
     /**
      * Returns the minimum necessary transit time in days.
