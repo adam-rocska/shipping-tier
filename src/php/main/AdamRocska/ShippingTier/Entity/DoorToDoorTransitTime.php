@@ -34,5 +34,5 @@ interface DoorToDoorTransitTime
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      * @return DateInterval
      */
-    public function getAtmost(): DateInterval;
+    public function getAtMost(): DateInterval;
 }
