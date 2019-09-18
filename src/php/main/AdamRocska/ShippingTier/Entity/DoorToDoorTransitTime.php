@@ -4,8 +4,6 @@
 namespace AdamRocska\ShippingTier\Entity;
 
 
-use AdamRocska\ShippingTier\Utility\DateInterval;
-
 /**
  * Represents a door-to-door transit estimate.
  *
@@ -17,14 +15,14 @@ use AdamRocska\ShippingTier\Utility\DateInterval;
 interface DoorToDoorTransitTime
 {
     /**
-     * Returns the minimum necessary transit time.
+     * Returns the minimum necessary transit time in days.
      *
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
-     * @return DateInterval
+     * @return int
      */
-    public function getAtLeast(): DateInterval;
+    public function getMinimumDays(): int;
 
     /**
      * Returns the maximum necessary transit time.
@@ -32,7 +30,7 @@ interface DoorToDoorTransitTime
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
-     * @return DateInterval
+     * @return int
      */
-    public function getAtMost(): DateInterval;
+    public function getMaximumDays(): int;
 }
