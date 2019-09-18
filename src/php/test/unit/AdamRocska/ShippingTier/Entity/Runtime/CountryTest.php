@@ -116,6 +116,46 @@ class CountryTest extends TestCase
         );
     }
 
+    public function testCreateFromMap(): void
+    {
+        $countryMap            = [
+            "HU" => "Hungary",
+            "DE" => "Germany",
+            "US" => "United States"
+        ];
+        $countries             = Country::createFromMap($countryMap);
+        $isoListInCountiesList = [];
+
+        foreach ($countries as $country) {
+            $isoListInCountiesList[] = $country->getIsoCode();
+            $this->assertArrayHasKey(
+                $country->getIsoCode(),
+                $countryMap,
+                "Received ISO code should exist in the original map."
+            );
+            $this->assertEquals(
+                $countryMap[$country->getIsoCode()],
+                $country->getLabel(),
+                "Country's related label should match."
+            );
+        }
+        $this->assertEquals(
+            count($countryMap),
+            count($isoListInCountiesList),
+            "Should have the same amount of ISO codes as originally defined."
+        );
+
+        $isoListInCountryMap = array_keys($countryMap);
+        sort($isoListInCountryMap);
+        sort($isoListInCountiesList);
+
+        $this->assertEquals(
+            $isoListInCountryMap,
+            $isoListInCountiesList,
+            "Should have the exact same ISO codes represented as provided."
+        );
+    }
+
     private function createMockComparableCoutnry(string $iso): MockObject
     {
         $mockObject = $this->createMock([
@@ -128,5 +168,6 @@ class CountryTest extends TestCase
 
         return $mockObject;
     }
+
 
 }

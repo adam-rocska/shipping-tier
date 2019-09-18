@@ -59,6 +59,26 @@ class Country implements CountryEntity, Equatable
     }
 
     /**
+     * Utility method for the mass creation of Country objects from a provided
+     * map.
+     *
+     * @param array $map Keys are considered to be ISO Codes. Values are
+     *                   considered to be labels.
+     *
+     * @return Country[]
+     * @example example/php/AdamRocska/ShippingTier/Entity/Runtime/country-creation-from-map.php
+     *
+     */
+    public static function createFromMap(array $map): iterable
+    {
+        $countries = [];
+        foreach ($map as $isoCode => $label) {
+            $countries[] = new Country($isoCode, $label);
+        }
+        return $countries;
+    }
+
+    /**
      * Returns the ISO Code of the country the object represents.
      *
      * @version Version 1.0.0
@@ -116,6 +136,5 @@ class Country implements CountryEntity, Equatable
 
         return $equatable->getIsoCode() === $this->getIsoCode();
     }
-
 
 }
