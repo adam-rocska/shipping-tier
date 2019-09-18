@@ -5,6 +5,7 @@ namespace AdamRocska\ShippingTier\Utility\DateInterval;
 
 
 use AdamRocska\ShippingTier\Utility\DateInterval;
+use AdamRocska\ShippingTier\Utility\DateInterval\Exception\CorruptIntervalSpec;
 use DateInterval as NativeDateInterval;
 
 class NativeWrapper implements DateInterval
@@ -25,9 +26,23 @@ class NativeWrapper implements DateInterval
         $this->nativeDateInterval = $nativeDateInterval;
     }
 
+    /**
+     * @param string $spec
+     *
+     * @return NativeWrapper
+     * @throws CorruptIntervalSpec
+     */
     public static function createFromIntervalSpec(string $spec): NativeWrapper
     {
-        return new NativeWrapper(new NativeDateInterval($spec));
+        try {
+            return new NativeWrapper(new NativeDateInterval($spec));
+        } catch (\Exception $exception) {
+            throw new CorruptIntervalSpec(
+                "Native date interval construction failed.",
+                0,
+                $exception
+            );
+        }
     }
 
     /**
@@ -144,21 +159,32 @@ class NativeWrapper implements DateInterval
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      * @return NativeDateInterval
+     * @throws CorruptIntervalSpec Throws a `CorruptIntervalSpec` in case the
+     *                             constructor of the `NativeDateInterval`
+     *                             throws an exception.
      */
     public function asNativeDateInterval(): NativeDateInterval
     {
         // weeks can be handled as input but not as format output.
-        $format       = "P";    // "period marker"
-        $format       .= "%yY"; // year
-        $format       .= "%mM"; // months
-        $format       .= "%dD"; // days
-        $format       .= "T";   // "time marker"
-        $format       .= "%hH"; // hours
-        $format       .= "%iM"; // minutes
-        $format       .= "%sS"; // seconds
-        $dateInterval = new NativeDateInterval(
-            $this->nativeDateInterval->format($format)
-        );
+        $format = "P";    // "period marker"
+        $format .= "%yY"; // year
+        $format .= "%mM"; // months
+        $format .= "%dD"; // days
+        $format .= "T";   // "time marker"
+        $format .= "%hH"; // hours
+        $format .= "%iM"; // minutes
+        $format .= "%sS"; // seconds
+        try {
+            $dateInterval = new NativeDateInterval(
+                $this->nativeDateInterval->format($format)
+            );
+        } catch (\Exception $exception) {
+            throw new CorruptIntervalSpec(
+                "Native date interval construction failed.",
+                0,
+                $exception
+            );
+        }
         if ($this->isBackwardInTime()) {
             $dateInterval->invert = 1;
         }

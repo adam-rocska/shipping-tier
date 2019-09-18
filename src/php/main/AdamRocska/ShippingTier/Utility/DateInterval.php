@@ -4,6 +4,7 @@
 namespace AdamRocska\ShippingTier\Utility;
 
 
+use AdamRocska\ShippingTier\Utility\DateInterval\Exception\CorruptIntervalSpec;
 use DateInterval as NativeDateInterval;
 
 /**
@@ -121,6 +122,9 @@ interface DateInterval
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      * @return NativeDateInterval
+     * @throws CorruptIntervalSpec Throws a `CorruptIntervalSpec` in case the
+     *                             constructor of the `NativeDateInterval`
+     *                             throws an exception.
      */
     public function asNativeDateInterval(): NativeDateInterval;
 }

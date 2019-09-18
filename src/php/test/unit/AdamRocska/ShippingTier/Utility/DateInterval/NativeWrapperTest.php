@@ -3,6 +3,7 @@
 namespace AdamRocska\ShippingTier\Utility\DateInterval;
 
 use DateInterval;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class NativeWrapperTest extends TestCase
@@ -110,6 +111,7 @@ class NativeWrapperTest extends TestCase
      * @param DateInterval $native
      *
      * @dataProvider nativeDateIntervals
+     * @throws Exception\CorruptIntervalSpec
      */
     public function testAsNativeDateInterval(DateInterval $native): void
     {
@@ -127,10 +129,38 @@ class NativeWrapperTest extends TestCase
         );
     }
 
+    public function testAsNativeDateInterval_wrapsException(): void
+    {
+        /** @var MockObject|DateInterval $mockNativeDateInterval */
+        $mockNativeDateInterval = $this->createMock(DateInterval::class);
+        $nativeWrapper          = new NativeWrapper($mockNativeDateInterval);
+        $mockNativeDateInterval
+            ->method("format")
+            ->willReturn("INVALID SPEC");
+
+        try {
+            $nativeWrapper->asNativeDateInterval();
+            $this->fail("Should have thrown an exception.");
+        } catch (Exception\CorruptIntervalSpec $exception) {
+            $this->assertEquals(
+                "Native date interval construction failed.",
+                $exception->getMessage(),
+                "Exception message should be descriptive."
+            );
+            $this->assertNotNull(
+                $exception->getPrevious(),
+                "Previous exception message should be bound."
+            );
+        }
+
+    }
+
+
     /**
      * @param string $intervalSpec
      *
      * @dataProvider intervalSpecs
+     * @throws Exception\CorruptIntervalSpec
      */
     public function testCreateFromIntervalSpec(string $intervalSpec): void
     {
@@ -146,6 +176,25 @@ class NativeWrapperTest extends TestCase
         );
 
     }
+
+    public function testCreateFromIntervalSpec_exceptionWrapping(): void
+    {
+        try {
+            NativeWrapper::createFromIntervalSpec("INVALID SPEC");
+            $this->fail("Should have thrown an exception.");
+        } catch (Exception\CorruptIntervalSpec $exception) {
+            $this->assertEquals(
+                "Native date interval construction failed.",
+                $exception->getMessage(),
+                "Exception message should be descriptive."
+            );
+            $this->assertNotNull(
+                $exception->getPrevious(),
+                "Previous exception message should be bound."
+            );
+        }
+    }
+
 
     private function asNegative(DateInterval $dateInterval): DateInterval
     {
