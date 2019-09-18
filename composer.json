@@ -1,0 +1,24 @@
+{
+    "name": "adam-rocska/shipping-tier",
+    "type": "library",
+    "description": "",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Rocska",
+            "email": "adam.rocska@adams.solutions"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7",
+        "phpdocumentor/phpdocumentor": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "AdamRocska\\ShippingTier\\": "src/php/main/AdamRocska/ShippingTier"
+        }
+    }
+}
