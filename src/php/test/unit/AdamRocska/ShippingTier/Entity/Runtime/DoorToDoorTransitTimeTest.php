@@ -5,6 +5,7 @@ namespace AdamRocska\ShippingTier\Entity\Runtime;
 use AdamRocska\ShippingTier\Entity\DoorToDoorTransitTime as DoorToDoorTransitTimeEntity;
 use AdamRocska\ShippingTier\Entity\Runtime\DoorToDoorTransitTime\Exception\InvalidBoundaries;
 use AdamRocska\ShippingTier\Equatable;
+use AdamRocska\ShippingTier\Equatable\Exception\UnequatableType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -88,7 +89,7 @@ class DoorToDoorTransitTimeTest extends TestCase
         try {
             $doorToDoorTransitTime->equals($equatableImplementation);
             $this->fail("Should have thrown an exception.");
-        } catch (Equatable\Exception\UnequatableType $exception) {
+        } catch (UnequatableType $exception) {
             $expectedMessage = "Object to check equality against is not a/an";
             $expectedMessage .= DoorToDoorTransitTimeEntity::class;
             $expectedMessage .= " implementation";
@@ -100,5 +101,66 @@ class DoorToDoorTransitTimeTest extends TestCase
         }
     }
 
+    /**
+     * @param int $minimumDays
+     * @param int $maximumDays
+     *
+     * @throws InvalidBoundaries
+     * @throws UnequatableType
+     *
+     * @dataProvider transitTimePairs
+     */
+    public function testEquals(int $minimumDays, int $maximumDays): void
+    {
+        $doorToDoorTransitTime = new DoorToDoorTransitTime(
+            $minimumDays,
+            $maximumDays
+        );
+
+        $differentMinimumDay           = $this->createMockDoorToDoorTransitTime(
+            $minimumDays - 1,
+            $maximumDays
+        );
+        $differentMaximumDay           = $this->createMockDoorToDoorTransitTime(
+            $minimumDays,
+            $maximumDays + 1
+        );
+        $differentMinimumAndMaximumDay = $this->createMockDoorToDoorTransitTime(
+            $minimumDays - 1,
+            $maximumDays + 1
+        );
+        $equalMinimumAndMaximumDay     = $this->createMockDoorToDoorTransitTime(
+            $minimumDays,
+            $maximumDays
+        );
+
+        $this->assertFalse(
+            $doorToDoorTransitTime->equals($differentMinimumDay),
+            "Shouldn't be equal for different minimum day."
+        );
+        $this->assertFalse(
+            $doorToDoorTransitTime->equals($differentMaximumDay),
+            "Shouldn't be equal for different maximum day."
+        );
+        $this->assertFalse(
+            $doorToDoorTransitTime->equals($differentMinimumAndMaximumDay),
+            "Shouldn't be equal for different minimum and maximum day."
+        );
+        $this->assertTrue(
+            $doorToDoorTransitTime->equals($equalMinimumAndMaximumDay),
+            "Should be equal for equal minimum and maximum day."
+        );
+    }
+
+    private function createMockDoorToDoorTransitTime(
+        int $minimumDay,
+        int $maximumDay
+    ): DoorToDoorTransitTimeEntity {
+        /** @var MockObject|DoorToDoorTransitTimeEntity $mockObject */
+        $mockObject = $this->createMock(DoorToDoorTransitTimeEntity::class);
+        $mockObject->method("getMinimumDays")->willReturn($minimumDay);
+        $mockObject->method("getMaximumDays")->willReturn($maximumDay);
+        return $mockObject;
+    }
 
 }

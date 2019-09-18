@@ -155,9 +155,13 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
      */
     public function equals(Equatable $equatable): bool
     {
-        $message = "Object to check equality against is not a/an";
-        $message .= DoorToDoorTransitTimeEntity::class;
-        $message .= " implementation";
-        throw new UnequatableType($message);
+        if (!($equatable instanceof DoorToDoorTransitTimeEntity)) {
+            $message = "Object to check equality against is not a/an";
+            $message .= DoorToDoorTransitTimeEntity::class;
+            $message .= " implementation";
+            throw new UnequatableType($message);
+        }
+        return ($equatable->getMinimumDays() === $this->getMinimumDays())
+               && ($equatable->getMaximumDays() === $this->getMaximumDays());
     }
 }
