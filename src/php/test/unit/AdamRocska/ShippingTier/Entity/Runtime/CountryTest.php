@@ -59,9 +59,10 @@ class CountryTest extends TestCase
         );
     }
 
-    public function testEquals_throwsExceptionIfIsntCountryEntity(): void
+    public function testEquals_throwsExceptionIfIsNotCountryEntity(): void
     {
-        $country       = new Country("test", "test");
+        $country = new Country("test", "test");
+        /** @var MockObject|Equatable $mockEquatable */
         $mockEquatable = $this->createMock(Equatable::class);
 
         try {
@@ -96,9 +97,9 @@ class CountryTest extends TestCase
         $archetype    = new Country($archetypeIso, "stub label");
 
         /** @var MockObject|Equatable|CountryEntity $equalObject */
-        $equalObject = $this->createMockComparableCoutnry($archetypeIso);
+        $equalObject = $this->createMockComparableCountry($archetypeIso);
         /** @var MockObject|Equatable|CountryEntity $unequalObject */
-        $unequalObject = $this->createMockComparableCoutnry("not matching iso");
+        $unequalObject = $this->createMockComparableCountry("not matching iso");
 
         $this->assertTrue(
             $archetype->equals($archetype),
@@ -156,7 +157,7 @@ class CountryTest extends TestCase
         );
     }
 
-    private function createMockComparableCoutnry(string $iso): MockObject
+    private function createMockComparableCountry(string $iso): MockObject
     {
         $mockObject = $this->createMock([
                                             Equatable::class,
