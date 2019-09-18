@@ -4,7 +4,6 @@
 namespace AdamRocska\ShippingTier\Entity;
 
 
-use AdamRocska\ShippingTier\Comparable;
 use AdamRocska\ShippingTier\Equatable;
 
 /**
@@ -15,7 +14,7 @@ use AdamRocska\ShippingTier\Equatable;
  * @since   Version 1.0.0
  * @author  Adam Rocska <adam.rocska@adams.solutions>
  */
-interface DoorToDoorTransitTime extends Equatable, Comparable
+interface DoorToDoorTransitTime extends Equatable
 {
     /**
      * Returns the minimum necessary transit time in days.

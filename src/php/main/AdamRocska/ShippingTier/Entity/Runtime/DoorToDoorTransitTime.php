@@ -4,8 +4,6 @@
 namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 
-use AdamRocska\ShippingTier\Comparable;
-use AdamRocska\ShippingTier\Comparable\Exception\UncomparableType;
 use AdamRocska\ShippingTier\Entity\DoorToDoorTransitTime as DoorToDoorTransitTimeEntity;
 use AdamRocska\ShippingTier\Entity\Runtime\DoorToDoorTransitTime\Exception\InvalidBoundaries;
 use AdamRocska\ShippingTier\Equatable;
@@ -92,51 +90,12 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
     }
 
     /**
-     * Compares the received object with the current one.
-     * Can be interpreted as `>` or as `$myObject > $thatObject`, where
-     * `$myObject->greaterThan($thatObject)` is called.
-     *
-     * @version Version 1.0.0
-     * @since   Version 1.0.0
-     * @author  Adam Rocska <adam.rocska@adams.solutions>
-     *
-     * @param Comparable $comparable
-     *
-     * @return bool
-     * @throws UncomparableType Throws an `UncomparableType` exception if the
-     *                          received input can't be compared against the
-     *                          current object.
-     */
-    public function greaterThan(Comparable $comparable): bool
-    {
-        // TODO: Implement greaterThan() method.
-    }
-
-    /**
-     * Compares the received object with the current one.
-     * Can be interpreted as `<` or as `$myObject < $thatObject`, where
-     * `$myObject->smallerThan($thatObject)` is called.
-     *
-     * @version Version 1.0.0
-     * @since   Version 1.0.0
-     * @author  Adam Rocska <adam.rocska@adams.solutions>
-     *
-     * @param Comparable $comparable
-     *
-     * @return bool
-     * @throws UncomparableType Throws an `UncomparableType` exception if the
-     *                          received input can't be compared against the
-     *                          current object.
-     */
-    public function smallerThan(Comparable $comparable): bool
-    {
-        // TODO: Implement smallerThan() method.
-    }
-
-    /**
      * Performs an equality check between the current object, and the received
      * object. It is up to the objects' implementations to decide how the
      * equality logic works.
+     *
+     * Two `DoorToDoorTransitTime` objects are considered equal if, and only if
+     * both their minimum and their maximum days are equal.
      *
      * @version Version 1.0.0
      * @since   Version 1.0.0
@@ -156,9 +115,9 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
     public function equals(Equatable $equatable): bool
     {
         if (!($equatable instanceof DoorToDoorTransitTimeEntity)) {
-            $message = "Object to check equality against is not a/an";
+            $message = "Object to check equality against is not a/an ";
             $message .= DoorToDoorTransitTimeEntity::class;
-            $message .= " implementation";
+            $message .= " implementation.";
             throw new UnequatableType($message);
         }
         return ($equatable->getMinimumDays() === $this->getMinimumDays())

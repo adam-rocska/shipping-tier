@@ -90,9 +90,9 @@ class DoorToDoorTransitTimeTest extends TestCase
             $doorToDoorTransitTime->equals($equatableImplementation);
             $this->fail("Should have thrown an exception.");
         } catch (UnequatableType $exception) {
-            $expectedMessage = "Object to check equality against is not a/an";
+            $expectedMessage = "Object to check equality against is not a/an ";
             $expectedMessage .= DoorToDoorTransitTimeEntity::class;
-            $expectedMessage .= " implementation";
+            $expectedMessage .= " implementation.";
             $this->assertEquals(
                 $expectedMessage,
                 $exception->getMessage(),
@@ -162,5 +162,6 @@ class DoorToDoorTransitTimeTest extends TestCase
         $mockObject->method("getMaximumDays")->willReturn($maximumDay);
         return $mockObject;
     }
+
 
 }
