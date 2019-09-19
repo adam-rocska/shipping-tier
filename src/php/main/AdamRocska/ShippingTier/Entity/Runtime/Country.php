@@ -5,8 +5,6 @@ namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 
 use AdamRocska\ShippingTier\Entity\Country as CountryEntity;
-use AdamRocska\ShippingTier\Equatable;
-use AdamRocska\ShippingTier\Equatable\Exception\UnequatableType;
 
 /**
  * Represents a runtime instance of a Country entity.
@@ -16,7 +14,7 @@ use AdamRocska\ShippingTier\Equatable\Exception\UnequatableType;
  * @since   Version 1.0.0
  * @author  Adam Rocska <adam.rocska@adams.solutions>
  */
-class Country implements CountryEntity, Equatable
+class Country implements CountryEntity
 {
 
     /**
@@ -104,37 +102,6 @@ class Country implements CountryEntity, Equatable
     public function getLabel(): string
     {
         return $this->label;
-    }
-
-    /**
-     * Performs an equality check on the received equatable object.
-     * Returns true if the ISO code of the current instance matches that of the
-     * received one.
-     * Returns false if it doesn't.
-     *
-     * @version Version 1.0.0
-     * @since   Version 1.0.0
-     * @author  Adam Rocska <adam.rocska@adams.solutions>
-     *
-     * @param Equatable|CountryEntity $equatable The equatable `CountryEntity`
-     *                                           to check for equality.
-     *
-     * @return bool
-     * @throws UnequatableType Throws an `UnequatableType` if the received
-     *                         equatable doesn't implement `CountryEntity`.
-     */
-    public function equals(Equatable $equatable): bool
-    {
-        if (!($equatable instanceof CountryEntity)) {
-            $exceptionMessage = "Expected a/an "
-                                . CountryEntity::class
-                                . " entity implementation. Got a/n"
-                                . get_class($equatable)
-                                . " instance.";
-            throw new UnequatableType($exceptionMessage);
-        }
-
-        return $equatable->getIsoCode() === $this->getIsoCode();
     }
 
 }

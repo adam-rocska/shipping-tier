@@ -66,21 +66,61 @@ class ShippingMethod implements ShippingMethodEntity, LazyCarrierInjectionAware,
     private $carrier;
 
     /**
+     * a human friendly / human readable label identifying the shipping
+     * method.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     * @var string
+     */
+    private $label;
+
+    /**
+     * Returns a computer program intended identifier identifying the shipping
+     * method.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     * @var string
+     */
+    private $identifier;
+
+    /**
      * ShippingMethod constructor.
      *
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      *
-     * @param Country[]             $countries
-     * @param DoorToDoorTransitTime $doorToDoorTransitTime
+     * @param string                $label                 A human friendly /
+     *                                                     human readable label
+     *                                                     identifying the
+     *                                                     shipping method.
+     * @param string                $identifier            A computer program
+     *                                                     intended identifier
+     *                                                     identifying the
+     *                                                     shipping method.
+     * @param DoorToDoorTransitTime $doorToDoorTransitTime The
+     *                                                     `DoorToDoorTransitionTime`
+     *                                                     of the current
+     *                                                     shipping method.
+     * @param Country[]             $countries             the list of
+     *                                                     countries handled by
+     *                                                     the current shipping
+     *                                                     method.
      */
     public function __construct(
+        string $label,
+        string $identifier,
         DoorToDoorTransitTime $doorToDoorTransitTime,
         iterable $countries
     ) {
         $this->doorToDoorTransitTime = $doorToDoorTransitTime;
         $this->countries             = $countries;
+        $this->label                 = $label;
+        $this->identifier            = $identifier;
     }
 
     /**
@@ -141,6 +181,30 @@ class ShippingMethod implements ShippingMethodEntity, LazyCarrierInjectionAware,
     }
 
     /**
+     * Tells whether the encapsulated list of countries contains the received
+     * country. It does equality comparison based on the encapsulated ISO Code.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param Country $country
+     *
+     * @return bool
+     */
+    public function hasCountry(Country $country): bool
+    {
+        $queriedIsoCode = $country->getIsoCode();
+        foreach ($this->countries as $encapsulatedCountry) {
+            if ($encapsulatedCountry->getIsoCode() === $queriedIsoCode) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * Returns the `Carrier` to which this shipping method belongs to.
      * `Carrier`s are lazily injected into this instance, therefore in order to
      * avoid runtime type related failures, make sure to test / assert /
@@ -171,17 +235,31 @@ class ShippingMethod implements ShippingMethodEntity, LazyCarrierInjectionAware,
     }
 
     /**
-     * Tells whether the current instance has a `Carrier` injected into it.
+     * Returns a human friendly / human readable label identifying the shipping
+     * method.
      *
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
-     *
-     * @return bool
+     * @return string
      */
-    public function hasCarrier(): bool
+    public function getLabel(): string
     {
-        return !is_null($this->carrier);
+        return $this->label;
+    }
+
+    /**
+     * Returns a computer program intended identifier identifying the shipping
+     * method.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
     }
 
     /**
@@ -195,6 +273,20 @@ class ShippingMethod implements ShippingMethodEntity, LazyCarrierInjectionAware,
     public function hasTier(): bool
     {
         return !is_null($this->tier);
+    }
+
+    /**
+     * Tells whether the current instance has a `Carrier` injected into it.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @return bool
+     */
+    public function hasCarrier(): bool
+    {
+        return !is_null($this->carrier);
     }
 
 

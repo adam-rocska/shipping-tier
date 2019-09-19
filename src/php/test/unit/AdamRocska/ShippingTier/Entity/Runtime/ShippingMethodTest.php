@@ -16,19 +16,19 @@ class ShippingMethodTest extends TestCase
      * @var MockObject|DoorToDoorTransitTime
      */
     private $stubDoorToDoorTransitTime;
+    /**
+     * @var (Country|MockObject)[]
+     */
+    private $stubCountries;
 
     public function testConstructorInjectedFields(): void
     {
-        $stubCountries  = [
-            $this->createMock(Country::class),
-            $this->createMock(Country::class),
-            $this->createMock(Country::class),
-            $this->createMock(Country::class),
-            $this->createMock(Country::class)
-        ];
+
         $shippingMethod = new ShippingMethod(
+            "test label",
+            "test identifier",
             $this->stubDoorToDoorTransitTime,
-            $stubCountries
+            $this->stubCountries
         );
         $this->assertSame(
             $this->stubDoorToDoorTransitTime,
@@ -37,16 +37,28 @@ class ShippingMethodTest extends TestCase
         );
         foreach ($shippingMethod->getCountries() as $countryIndex => $country) {
             $this->assertSame(
-                $stubCountries[$countryIndex],
+                $this->stubCountries[$countryIndex],
                 $country,
                 "Expected to have the same stub country at index $countryIndex"
             );
         }
+        $this->assertEquals(
+            "test label",
+            $shippingMethod->getLabel(),
+            "Label should be returned as is."
+        );
+        $this->assertEquals(
+            "test identifier",
+            $shippingMethod->getIdentifier(),
+            "Identifier should be returned as is."
+        );
     }
 
     public function testCarrierBinding(): void
     {
         $shippingMethod = new ShippingMethod(
+            "test",
+            "test",
             $this->stubDoorToDoorTransitTime,
             []
         );
@@ -71,6 +83,8 @@ class ShippingMethodTest extends TestCase
     public function testTierBinding(): void
     {
         $shippingMethod = new ShippingMethod(
+            "test",
+            "test",
             $this->stubDoorToDoorTransitTime,
             []
         );
@@ -92,11 +106,69 @@ class ShippingMethodTest extends TestCase
         );
     }
 
+    public function countryCodes(): iterable
+    {
+        return [
+            [["HU", "DE"]],
+            [["HU", "DE", "AU"]],
+            [["HU", "DE", "AU", "IT"]],
+            [["HU", "DE", "AU", "IT", "US"]]
+        ];
+    }
+
+    /**
+     * @param iterable $supportedCountryCodes
+     *
+     * @dataProvider countryCodes
+     */
+    public function testHasCountry(iterable $supportedCountryCodes): void
+    {
+        $countries = [];
+        foreach ($supportedCountryCodes as $supportedCountryCode) {
+            $countries[] = $this->createMockCountry($supportedCountryCode);
+        }
+        $shippingMethod = new ShippingMethod(
+            "test",
+            "test",
+            $this->stubDoorToDoorTransitTime,
+            $countries
+        );
+        foreach ($supportedCountryCodes as $supportedCountryCode) {
+            // note, that we intentionally create a new instance. We want to
+            // assure, that it works on data level, and not on instance level.
+            $countryToQuery = $this->createMockCountry($supportedCountryCode);
+            $this->assertTrue(
+                $shippingMethod->hasCountry($countryToQuery),
+                "Should return true for a country object of iso $supportedCountryCode."
+            );
+        }
+        $nonExistantCountry = $this->createMockCountry("DOESNT EXIST");
+        $this->assertFalse(
+            $shippingMethod->hasCountry($nonExistantCountry),
+            "Should return false for a country object that wasn't injected."
+        );
+    }
+
     protected function setUp()
     {
         parent::setUp();
         $this->stubDoorToDoorTransitTime = $this->createMock(
             DoorToDoorTransitTime::class
         );
+        $this->stubCountries             = [
+            $this->createMockCountry("HU"),
+            $this->createMockCountry("DE"),
+            $this->createMockCountry("AU"),
+            $this->createMockCountry("IT"),
+            $this->createMockCountry("US")
+        ];
+    }
+
+    private function createMockCountry(string $isoCode): Country
+    {
+        /** @var MockObject|Country $mockObject */
+        $mockObject = $this->createMock(Country::class);
+        $mockObject->method("getIsoCode")->willReturn($isoCode);
+        return $mockObject;
     }
 }
