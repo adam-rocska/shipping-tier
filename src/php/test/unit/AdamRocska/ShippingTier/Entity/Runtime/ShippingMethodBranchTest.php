@@ -41,7 +41,6 @@ class ShippingMethodBranchTest extends TestCase
         }
     }
 
-
     public function testTierBinding(): void
     {
         $shippingMethod = new ShippingMethodBranch(
