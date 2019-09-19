@@ -3,7 +3,9 @@
 namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 use AdamRocska\ShippingTier\Entity\Carrier;
+use AdamRocska\ShippingTier\Entity\LazyShippingMethodInjectionAware;
 use AdamRocska\ShippingTier\Entity\ShippingMethodBranch;
+use PHPUnit\Framework\MockObject\Matcher\InvokedCount as InvokedCountMatcher;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -65,6 +67,62 @@ class ShippingMethodTest extends TestCase
         );
     }
 
+    public function testConstructorSetsSelfInLazyShippingMethodBranches(): void
+    {
+        $mixedShippingMethodBranches = [
+            $this->createMock(ShippingMethodBranch::class),
+            $this->createMockShippingMethodAwareBranch(),
+            $this->createMockShippingMethodAwareBranch(),
+            $this->createMockShippingMethodAwareBranch(),
+            $this->createMock(ShippingMethodBranch::class),
+            $this->createMockShippingMethodAwareBranch(),
+            $this->createMock(ShippingMethodBranch::class),
+            $this->createMock(ShippingMethodBranch::class),
+            $this->createMockShippingMethodAwareBranch(),
+            $this->createMock(ShippingMethodBranch::class),
+            $this->createMockShippingMethodAwareBranch()
+        ];
+        /** @var InvokedCountMatcher[] $invocationMatchers */
+        $invocationMatchers = [];
+
+        /** @var MockObject|ShippingMethodBranch|LazyShippingMethodInjectionAware $branch */
+        foreach ($mixedShippingMethodBranches as $branch) {
+            if (!($branch instanceof LazyShippingMethodInjectionAware)) {
+                continue;
+            }
+            $once = $this->once();
+            $branch
+                ->expects($once)
+                ->method("setShippingMethod");
+            $invocationMatchers[] = $once;
+        }
+
+        $expectedShippingMethod = new ShippingMethod(
+            "test",
+            "test",
+            $mixedShippingMethodBranches
+        );
+
+        foreach ($invocationMatchers as $invocationMatcher) {
+            // we need this assertion here, as mocks are being validated after
+            // test execution, while we need this information during test
+            // execution for a spy-like behavior.
+            $invocations = $invocationMatcher->getInvocations();
+            $this->assertEquals(
+                1,
+                count($invocations),
+                "setShippingMethod should have been called exactly once."
+            );
+            $invocation = $invocations[0];
+            list($actualShippingMethod) = $invocation->getParameters();
+            $this->assertSame(
+                $expectedShippingMethod,
+                $actualShippingMethod,
+                "The shipping method should inject itself into the lazy shipping method branch."
+            );
+        }
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -77,5 +135,15 @@ class ShippingMethodTest extends TestCase
         ];
     }
 
+    /**
+     * @return MockObject|ShippingMethodBranch|LazyShippingMethodInjectionAware
+     */
+    private function createMockShippingMethodAwareBranch(): ShippingMethodBranch
+    {
+        return $this->createMock([
+                                     ShippingMethodBranch::class,
+                                     LazyShippingMethodInjectionAware::class
+                                 ]);
+    }
 
 }

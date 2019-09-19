@@ -6,6 +6,7 @@ namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 use AdamRocska\ShippingTier\Entity\Carrier;
 use AdamRocska\ShippingTier\Entity\LazyCarrierInjectionAware;
+use AdamRocska\ShippingTier\Entity\LazyShippingMethodInjectionAware;
 use AdamRocska\ShippingTier\Entity\ShippingMethod as ShippingMethodEntity;
 use AdamRocska\ShippingTier\Entity\ShippingMethodBranch;
 
@@ -92,6 +93,12 @@ class ShippingMethod implements ShippingMethodEntity, LazyCarrierInjectionAware
         $this->label      = $label;
         $this->identifier = $identifier;
         $this->branches   = $branches;
+
+        foreach ($this->branches as $branch) {
+            if ($branch instanceof LazyShippingMethodInjectionAware) {
+                $branch->setShippingMethod($this);
+            }
+        }
     }
 
     /**
