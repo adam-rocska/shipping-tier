@@ -2,7 +2,10 @@
 
 namespace AdamRocska\ShippingTier\Entity\Runtime;
 
+use AdamRocska\ShippingTier\Entity\LazyCarrierInjectionAware;
 use AdamRocska\ShippingTier\Entity\ShippingMethod;
+use PHPUnit\Framework\MockObject\Matcher\InvokedCount as InvokedCountMatcher;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CarrierTest extends TestCase
@@ -56,6 +59,62 @@ class CarrierTest extends TestCase
         }
     }
 
+    public function testConstructorSetsSelfInLazyShippingMethods(): void
+    {
+        $mixedShippingMethods = [
+            $this->createMock(ShippingMethod::class),
+            $this->createMockCarrierAwareShippingMethod(),
+            $this->createMockCarrierAwareShippingMethod(),
+            $this->createMockCarrierAwareShippingMethod(),
+            $this->createMock(ShippingMethod::class),
+            $this->createMockCarrierAwareShippingMethod(),
+            $this->createMock(ShippingMethod::class),
+            $this->createMock(ShippingMethod::class),
+            $this->createMockCarrierAwareShippingMethod(),
+            $this->createMock(ShippingMethod::class),
+            $this->createMockCarrierAwareShippingMethod()
+        ];
+        /** @var InvokedCountMatcher[] $invocationMatchers */
+        $invocationMatchers = [];
+
+        /** @var MockObject|ShippingMethod|LazyCarrierInjectionAware $shippingMethod */
+        foreach ($mixedShippingMethods as $shippingMethod) {
+            if (!($shippingMethod instanceof LazyCarrierInjectionAware)) {
+                continue;
+            }
+            $once = $this->once();
+            $shippingMethod
+                ->expects($once)
+                ->method("setCarrier");
+            $invocationMatchers[] = $once;
+        }
+
+        $expectedShippingMethod = new Carrier(
+            "test",
+            "test",
+            $mixedShippingMethods
+        );
+
+        foreach ($invocationMatchers as $invocationMatcher) {
+            // we need this assertion here, as mocks are being validated after
+            // test execution, while we need this information during test
+            // execution for a spy-like behavior.
+            $invocations = $invocationMatcher->getInvocations();
+            $this->assertEquals(
+                1,
+                count($invocations),
+                "setShippingMethod should have been called exactly once."
+            );
+            $invocation = $invocations[0];
+            list($actualShippingMethod) = $invocation->getParameters();
+            $this->assertSame(
+                $expectedShippingMethod,
+                $actualShippingMethod,
+                "The shipping method should inject itself into the lazy shipping method shippingMethod."
+            );
+        }
+    }
+
     private function createStubShippingMethods(
         int $numberOfShippingMethods
     ): iterable {
@@ -64,6 +123,17 @@ class CarrierTest extends TestCase
             $stubShippingMethods[] = $this->createMock(ShippingMethod::class);
         }
         return $stubShippingMethods;
+    }
+
+    /**
+     * @return MockObject|ShippingMethod|LazyCarrierInjectionAware
+     */
+    private function createMockCarrierAwareShippingMethod(): ShippingMethod
+    {
+        return $this->createMock([
+                                     ShippingMethod::class,
+                                     LazyCarrierInjectionAware::class
+                                 ]);
     }
 
 }

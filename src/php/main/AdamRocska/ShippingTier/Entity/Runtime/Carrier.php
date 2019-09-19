@@ -5,6 +5,7 @@ namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 
 use AdamRocska\ShippingTier\Entity\Carrier as CarrierEntity;
+use AdamRocska\ShippingTier\Entity\LazyCarrierInjectionAware;
 use AdamRocska\ShippingTier\Entity\ShippingMethod;
 
 /**
@@ -69,6 +70,12 @@ class Carrier implements CarrierEntity
         $this->label           = $label;
         $this->identifier      = $identifier;
         $this->shippingMethods = $shippingMethods;
+
+        foreach ($this->shippingMethods as $shippingMethod) {
+            if ($shippingMethod instanceof LazyCarrierInjectionAware) {
+                $shippingMethod->setCarrier($this);
+            }
+        }
     }
 
     /**
