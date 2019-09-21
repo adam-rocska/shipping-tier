@@ -43,7 +43,8 @@ class TestFixtures
             $testFixtureDirInfo->getRealPath()
         );
         foreach ($testFixtureDir as $fixtureFileInfo) {
-            if ($fixtureFileInfo->getExtension() === "csv") {
+            $extension = $fixtureFileInfo->getExtension();
+            if ($extension === TestFixture::DATASET_FILE_EXTENSION) {
                 $key                      = $fixtureFileInfo->getFilename();
                 $this->testFixtures[$key] = new TestFixture($fixtureFileInfo);
             }

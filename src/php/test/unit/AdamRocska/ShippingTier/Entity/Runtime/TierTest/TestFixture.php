@@ -8,6 +8,7 @@ use SplFileInfo;
 
 class TestFixture
 {
+    const DATASET_FILE_EXTENSION = "csv";
 
     /**
      * @var iterable
@@ -20,6 +21,11 @@ class TestFixture
     private $winnerRecordIndex;
 
     /**
+     * @var string
+     */
+    private $descriptionPath;
+
+    /**
      * TestFixture constructor.
      *
      * @param SplFileInfo $splFileInfo
@@ -28,7 +34,7 @@ class TestFixture
     {
         assert($splFileInfo->isFile());
         assert($splFileInfo->isReadable());
-        assert($splFileInfo->getExtension() === "csv");
+        assert($splFileInfo->getExtension() === self::DATASET_FILE_EXTENSION);
         $splFileObject  = $splFileInfo->openFile();
         $csvRecordIndex = 0;
         while (!$splFileObject->eof()) {
@@ -51,6 +57,15 @@ class TestFixture
             }
             $csvRecordIndex++;
         }
+
+        $this->descriptionPath = substr(
+                                     $splFileInfo->getRealPath(),
+                                     0,
+                                     -1 * strlen(self::DATASET_FILE_EXTENSION))
+                                 . "md";
+
+        $descriptionPathFileInfo = new SplFileInfo($this->descriptionPath);
+        assert($descriptionPathFileInfo->isFile(), "A textual description must exist for this dataset.");
     }
 
     /**
@@ -73,4 +88,13 @@ class TestFixture
     {
         return $this->winnerRecordIndex;
     }
+
+    /**
+     * @return string
+     */
+    public function getDescriptionPath(): string
+    {
+        return $this->descriptionPath;
+    }
+
 }

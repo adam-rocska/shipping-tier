@@ -164,7 +164,12 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
                           + $best->getMinimumDays()
                       ) / 2;
 
-        return ($currentMedian < $bestMedian)
-               || $current->getMinimumDays() < $best->getMinimumDays();
+        if ($currentMedian < $bestMedian) {
+            return true;
+        }
+        if ($currentMedian === $bestMedian) {
+            return $current->getMinimumDays() < $best->getMinimumDays();
+        }
+        return false;
     }
 }

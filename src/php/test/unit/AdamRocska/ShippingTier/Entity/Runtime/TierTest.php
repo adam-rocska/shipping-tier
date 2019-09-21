@@ -214,6 +214,9 @@ class TierTest extends TestCase
         $assertionMessage .= (string)$actualBranch
             ->getDoorToDoorTransitTime()
             ->getMaximumDays();
+        $assertionMessage .= "\n";
+        $assertionMessage .= "Read the following test spec for details : ";
+        $assertionMessage .= $testFixture->getDescriptionPath();
 
         $this->assertSame($expectedBranch, $actualBranch, $assertionMessage);
     }
