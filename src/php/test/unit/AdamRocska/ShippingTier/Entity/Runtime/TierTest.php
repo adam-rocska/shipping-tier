@@ -192,11 +192,30 @@ class TierTest extends TestCase
         $actualBranch = $tier->getFastestShippingMethodBranchForCountry(
             $this->stubCountry
         );
-        $this->assertSame(
-            $expectedBranch,
-            $actualBranch,
-            "Expected this branch to be the \"fastest\"."
-        );
+
+        $assertionMessage = "Expected fastest transit time\n";
+        $assertionMessage .= "Minimum days : ";
+        $assertionMessage .= (string)$expectedBranch
+            ->getDoorToDoorTransitTime()
+            ->getMinimumDays();
+        $assertionMessage .= "\n";
+        $assertionMessage .= "Maximum days : ";
+        $assertionMessage .= (string)$expectedBranch
+            ->getDoorToDoorTransitTime()
+            ->getMaximumDays();
+        $assertionMessage .= "\n";
+        $assertionMessage .= "Actual fastest transit time\n";
+        $assertionMessage .= "Minimum days : ";
+        $assertionMessage .= (string)$actualBranch
+            ->getDoorToDoorTransitTime()
+            ->getMinimumDays();
+        $assertionMessage .= "\n";
+        $assertionMessage .= "Maximum days : ";
+        $assertionMessage .= (string)$actualBranch
+            ->getDoorToDoorTransitTime()
+            ->getMaximumDays();
+
+        $this->assertSame($expectedBranch, $actualBranch, $assertionMessage);
     }
 
     protected function setUp()
@@ -232,8 +251,6 @@ class TierTest extends TestCase
             if ($index === $expectedMatchIndex) {
                 $expectedMatch = $mockBranch;
             }
-
-            $isFirst = false;
         }
 
         assert(!is_null($expectedMatch), "There was no branch to mock as matched at index $expectedMatchIndex");
