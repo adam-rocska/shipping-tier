@@ -2,3 +2,5 @@ vendor
 .idea
 artifact
 .scannerwork
+# used for local experiments
+sandbox.php
