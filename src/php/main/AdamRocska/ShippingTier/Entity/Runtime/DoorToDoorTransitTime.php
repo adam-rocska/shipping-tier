@@ -6,8 +6,6 @@ namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 use AdamRocska\ShippingTier\Entity\DoorToDoorTransitTime as DoorToDoorTransitTimeEntity;
 use AdamRocska\ShippingTier\Entity\Runtime\DoorToDoorTransitTime\Exception\InvalidBoundaries;
-use AdamRocska\ShippingTier\Equatable;
-use AdamRocska\ShippingTier\Equatable\Exception\UnequatableType;
 
 /**
  * Represents a simple runtime `DoorToDoorTransitTime` entity implementation.
@@ -89,38 +87,4 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
         return $this->maximumDays;
     }
 
-    /**
-     * Performs an equality check between the current object, and the received
-     * object. It is up to the objects' implementations to decide how the
-     * equality logic works.
-     *
-     * Two `DoorToDoorTransitTime` objects are considered equal if, and only if
-     * both their minimum and their maximum days are equal.
-     *
-     * @version Version 1.0.0
-     * @since   Version 1.0.0
-     * @author  Adam Rocska <adam.rocska@adams.solutions>
-     *
-     * @param Equatable $equatable
-     *
-     * @return bool Returns `true` if the current object is considered to be
-     *              equal with the received object. Returns `false` if the
-     *              current object is not considered to be equal with the
-     *              received object.
-     * @throws UnequatableType Throws an `UnequatableType` exception if the
-     *                         equality can not be performed due to a type
-     *                         mismatch. This exception is used to tackle PHP's
-     *                         current covariance & contra-variance concepts.
-     */
-    public function equals(Equatable $equatable): bool
-    {
-        if (!($equatable instanceof DoorToDoorTransitTimeEntity)) {
-            $message = "Object to check equality against is not a/an ";
-            $message .= DoorToDoorTransitTimeEntity::class;
-            $message .= " implementation.";
-            throw new UnequatableType($message);
-        }
-        return ($equatable->getMinimumDays() === $this->getMinimumDays())
-               && ($equatable->getMaximumDays() === $this->getMaximumDays());
-    }
 }
