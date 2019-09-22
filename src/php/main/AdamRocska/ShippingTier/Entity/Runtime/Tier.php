@@ -161,8 +161,6 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
         $minAngle = atan2($t, $r) * (180 / M_PI);
         $maxAngle = atan2($s, $r) * (180 / M_PI);
 
-        return $minAngle > 0
-            ? $maxAngle < $minAngle
-            : false;
+        return ($minAngle > 0) && ($maxAngle < $minAngle);
     }
 }
