@@ -240,4 +240,5 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
             throw new NoShippingMethodBranchForCountry($exceptionMessage);
         }
     }
+
 }
