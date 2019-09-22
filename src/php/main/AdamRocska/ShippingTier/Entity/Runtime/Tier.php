@@ -154,22 +154,15 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
         DoorToDoorTransitTime $current,
         DoorToDoorTransitTime $best
     ): bool {
-        $currentMedian = (
-                             $current->getMaximumDays()
-                             + $current->getMinimumDays()
-                         ) / 2;
+        $r = $best->getMaximumDays() - $best->getMinimumDays();
+        $t = $best->getMinimumDays() - $current->getMinimumDays();
+        $s = $current->getMaximumDays() - $best->getMaximumDays();
 
-        $bestMedian = (
-                          $best->getMaximumDays()
-                          + $best->getMinimumDays()
-                      ) / 2;
+        $minAngle = atan2($t, $r) * (180 / M_PI);
+        $maxAngle = atan2($s, $r) * (180 / M_PI);
 
-        if ($currentMedian < $bestMedian) {
-            return true;
-        }
-        if ($currentMedian === $bestMedian) {
-            return $current->getMinimumDays() < $best->getMinimumDays();
-        }
-        return false;
+        return $minAngle > 0
+            ? $maxAngle < $minAngle
+            : false;
     }
 }
