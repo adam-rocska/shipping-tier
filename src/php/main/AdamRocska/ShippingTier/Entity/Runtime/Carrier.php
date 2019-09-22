@@ -117,5 +117,4 @@ class Carrier implements CarrierEntity
         return $this->shippingMethods;
     }
 
-
 }
