@@ -122,9 +122,7 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
     public function getFastestShippingMethodBranchForCountry(
         Country $country
     ): ShippingMethodBranch {
-        if (count($this->shippingMethodBranches) === 0) {
-            throw new NoShippingMethodBranchesBound("There are no shipping method branches bound to this tier.");
-        }
+        $this->assertHasShippingMethodBranches();
 
         $bestBranch = null;
         foreach ($this->shippingMethodBranches as $currentBranch) {
@@ -144,14 +142,7 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
             }
         }
 
-        if (is_null($bestBranch)) {
-            $exceptionMessage = "No shipping method found for country "
-                                . $country->getLabel()
-                                . " of ISO code "
-                                . $country->getIsoCode()
-                                . ".";
-            throw new NoShippingMethodBranchForCountry($exceptionMessage);
-        }
+        $this->assertShippingMethodFoundForCountry($country, $bestBranch);
         return $bestBranch;
     }
 
@@ -211,5 +202,42 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
         $maxAngle = atan2($s, $r) * (180 / M_PI);
 
         return ($minAngle > 0) && ($maxAngle < $minAngle);
+    }
+
+    /**
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     * @throws NoShippingMethodBranchesBound
+     */
+    private function assertHasShippingMethodBranches(): void
+    {
+        if (count($this->shippingMethodBranches) === 0) {
+            throw new NoShippingMethodBranchesBound("There are no shipping method branches bound to this tier.");
+        }
+    }
+
+    /**
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param ShippingMethodBranch|null $bestBranch
+     * @param Country                   $country
+     *
+     * @throws NoShippingMethodBranchForCountry
+     */
+    private function assertShippingMethodFoundForCountry(
+        Country $country,
+        ?ShippingMethodBranch $bestBranch
+    ): void {
+        if (is_null($bestBranch)) {
+            $exceptionMessage = "No shipping method found for country "
+                                . $country->getLabel()
+                                . " of ISO code "
+                                . $country->getIsoCode()
+                                . ".";
+            throw new NoShippingMethodBranchForCountry($exceptionMessage);
+        }
     }
 }
