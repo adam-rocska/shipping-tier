@@ -1,704 +1,624 @@
-<!--
-  ~ Copyright 2019 Adam Rocska
-  ~
-  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-  ~
-  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-  ~
-  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  -->
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
-        <meta charset="utf-8"/>
-        <title>Shipping Tier</title>
-        <meta content="" name="author"/>
-        <meta content="" name="description"/>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Shipping Tier</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
 
-        <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-        <link href="../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../css/prism.css" media="all" rel="stylesheet"/>
-        <link href="../css/template.css" media="all" rel="stylesheet"/>
-
-        <!--[if lt IE 9]>
-        <script src="../js/html5.js"></script>
-        <![endif]-->
-        <script src="../js/jquery-1.11.0.min.js"></script>
-        <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
-        <script src="../js/bootstrap.min.js"></script>
-        <script src="../js/jquery.smooth-scroll.js"></script>
-        <script src="../js/prism.min.js"></script>
-        <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
         <script type="text/javascript">
-            function loadExternalCodeSnippets() {
-                Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
-                    var src = pre.getAttribute('data-src').replace(/\\/g, '/');
-                    var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-                    var language = 'php';
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src').replace( /\\/g, '/');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
 
-                    var code = document.createElement('code');
-                    code.className = 'language-' + language;
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
 
-                    pre.textContent = '';
+                pre.textContent = '';
 
-                    code.textContent = 'Loading…';
+                code.textContent = 'Loading…';
 
-                    pre.appendChild(code);
+                pre.appendChild(code);
 
-                    var xhr = new XMLHttpRequest();
+                var xhr = new XMLHttpRequest();
 
-                    xhr.open('GET', src, true);
+                xhr.open('GET', src, true);
 
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState == 4) {
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
 
-                            if (xhr.status < 400 && xhr.responseText) {
-                                code.textContent = xhr.responseText;
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
 
-                                Prism.highlightElement(code);
-                            } else if (xhr.status >= 400) {
-                                code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                            } else {
-                                code.textContent = '✖ Error: File does not exist or is empty';
-                            }
+                            Prism.highlightElement(code);
                         }
-                    };
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
 
-                    xhr.send(null);
-                });
-            }
-
-            $(document).ready(function () {
-                loadExternalCodeSnippets();
+                xhr.send(null);
             });
-            $('#source-view').on('shown', function () {
-                loadExternalCodeSnippets();
-            })
-        </script>
+        }
 
-        <link href="../images/favicon.ico" rel="shortcut icon"/>
-        <link href="../images/apple-touch-icon.png" rel="apple-touch-icon"/>
-        <link href="../images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72"/>
-        <link href="../images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114"/>
-    </head>
-    <body>
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
 
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
-                        <i class="icon-ellipsis-vertical"></i>
-                    </a>
-                    <a class="brand" href="../index.html">Shipping Tier</a>
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
 
-                    <div class="nav-collapse">
-                        <ul class="nav pull-right">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="../index.html">
-                                    API Documentation <b class="caret"></b>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Shipping Tier</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/AdamRocska.html">\AdamRocska</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="../namespaces/AdamRocska.html">\AdamRocska</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown" id="charts-menu">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Charts <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="../graphs/class.html">
-                                            <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown" id="reports-menu">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Reports <b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="../reports/errors.html">
-                                            <i class="icon-list-alt"></i>&#160;Errors
-                                            <span class="label label-info pull-right">0</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="../reports/markers.html">
-                                            <i class="icon-list-alt"></i>&#160;Markers
-                                            <span class="label label-info pull-right">0</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="../reports/deprecated.html">
-                                            <i class="icon-list-alt"></i>&#160;Deprecated
-                                            <span class="label label-info pull-right">0</span>
-                                        </a>
-                                    </li>
-                                </ul>
                             </li>
                         </ul>
-                    </div>
-                </div>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <!--<div class="go_to_top">-->
-            <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
-            <!--</div>-->
         </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
 
-        <div class="container-fluid" id="___">
-            <section class="row-fluid">
-                <div class="span2 sidebar">
-                    <div class="accordion" style="margin-bottom: 0">
-                        <div class="accordion-group">
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle " data-target="#namespace-1485325236" data-toggle="collapse"></a>
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-2066029714"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
-                            </div>
-                            <div class="accordion-body collapse in" id="namespace-1485325236">
-                                <div class="accordion-inner">
-
-                                    <div class="accordion" style="margin-bottom: 0">
-                                        <div class="accordion-group">
-                                            <div class="accordion-heading">
-                                                <a class="accordion-toggle collapsed" data-target="#namespace-1667556756" data-toggle="collapse"></a>
-                                                <a href="../namespaces/AdamRocska.html" style="margin-left: 30px; padding-left: 0">AdamRocska</a>
-                                            </div>
-                                            <div class="accordion-body collapse " id="namespace-1667556756">
-                                                <div class="accordion-inner">
+            </div>
+            <div id="namespace-2066029714" class="accordion-body collapse in">
+                <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
-                                                        <div class="accordion-group">
-                                                            <div class="accordion-heading">
-                                                                <a class="accordion-toggle collapsed" data-target="#namespace-498348847" data-toggle="collapse"></a>
-                                                                <a href="../namespaces/AdamRocska.ShippingTier.html" style="margin-left: 30px; padding-left: 0">ShippingTier</a>
-                                                            </div>
-                                                            <div class="accordion-body collapse " id="namespace-498348847">
-                                                                <div class="accordion-inner">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1216957402"></a>
+                                <a href="../namespaces/AdamRocska.html" style="margin-left: 30px; padding-left: 0">AdamRocska</a>
+            </div>
+            <div id="namespace-1216957402" class="accordion-body collapse ">
+                <div class="accordion-inner">
 
-                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                        <div class="accordion-group">
-                                                                            <div class="accordion-heading">
-                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-1483116455" data-toggle="collapse"></a>
-                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.html" style="margin-left: 30px; padding-left: 0">Entity</a>
-                                                                            </div>
-                                                                            <div class="accordion-body collapse " id="namespace-1483116455">
-                                                                                <div class="accordion-inner">
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1954492835"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.html" style="margin-left: 30px; padding-left: 0">ShippingTier</a>
+            </div>
+            <div id="namespace-1954492835" class="accordion-body collapse ">
+                <div class="accordion-inner">
 
-                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                        <div class="accordion-group">
-                                                                                            <div class="accordion-heading">
-                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-1420692767" data-toggle="collapse"></a>
-                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Carrier.html" style="margin-left: 30px; padding-left: 0">Carrier</a>
-                                                                                            </div>
-                                                                                            <div class="accordion-body collapse " id="namespace-1420692767">
-                                                                                                <div class="accordion-inner">
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-964425176"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.html" style="margin-left: 30px; padding-left: 0">Entity</a>
+            </div>
+            <div id="namespace-964425176" class="accordion-body collapse ">
+                <div class="accordion-inner">
 
-                                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                                        <div class="accordion-group">
-                                                                                                            <div class="accordion-heading">
-                                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-997580594" data-toggle="collapse"></a>
-                                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Carrier.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
-                                                                                                            </div>
-                                                                                                            <div class="accordion-body collapse " id="namespace-997580594">
-                                                                                                                <div class="accordion-inner">
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-695061553"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Carrier.html" style="margin-left: 30px; padding-left: 0">Carrier</a>
+            </div>
+            <div id="namespace-695061553" class="accordion-body collapse ">
+                <div class="accordion-inner">
 
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-363527347"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Carrier.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
+            </div>
+            <div id="namespace-363527347" class="accordion-body collapse ">
+                <div class="accordion-inner">
 
-                                                                                                                    <ul>
-                                                                                                                        <li class="class">
-                                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Carrier.Exception.NoShippingMethod.html">NoShippingMethod</a>
-                                                                                                                        </li>
-                                                                                                                    </ul>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-
-
-                                                                                                    <ul>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Carrier.Exception.html">Exception</a>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                        <div class="accordion-group">
-                                                                                            <div class="accordion-heading">
-                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-17228740" data-toggle="collapse"></a>
-                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Runtime.html" style="margin-left: 30px; padding-left: 0">Runtime</a>
-                                                                                            </div>
-                                                                                            <div class="accordion-body collapse " id="namespace-17228740">
-                                                                                                <div class="accordion-inner">
-
-                                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                                        <div class="accordion-group">
-                                                                                                            <div class="accordion-heading">
-                                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-935612619" data-toggle="collapse"></a>
-                                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.html" style="margin-left: 30px; padding-left: 0">DoorToDoorTransitTime</a>
-                                                                                                            </div>
-                                                                                                            <div class="accordion-body collapse " id="namespace-935612619">
-                                                                                                                <div class="accordion-inner">
-
-                                                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                                                        <div class="accordion-group">
-                                                                                                                            <div class="accordion-heading">
-                                                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-64122911" data-toggle="collapse"></a>
-                                                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
-                                                                                                                            </div>
-                                                                                                                            <div class="accordion-body collapse " id="namespace-64122911">
-                                                                                                                                <div class="accordion-inner">
-
-
-                                                                                                                                    <ul>
-                                                                                                                                        <li class="class">
-                                                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.Exception.InvalidBoundaries.html">InvalidBoundaries</a>
-                                                                                                                                        </li>
-                                                                                                                                    </ul>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-
-
-                                                                                                                    <ul>
-                                                                                                                        <li class="class">
-                                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.Exception.html">Exception</a>
-                                                                                                                        </li>
-                                                                                                                    </ul>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-
-
-                                                                                                    <ul>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Carrier.html">Carrier</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Country.html">Country</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.html">DoorToDoorTransitTime</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Exception.html">Exception</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.ShippingMethod.html">ShippingMethod</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.ShippingMethodBranch.html">ShippingMethodBranch</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Tier.html">Tier</a>
-                                                                                                        </li>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.WildCardShippingMethodBranch.html">WildCardShippingMethodBranch</a>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                        <div class="accordion-group">
-                                                                                            <div class="accordion-heading">
-                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-612075965" data-toggle="collapse"></a>
-                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Tier.html" style="margin-left: 30px; padding-left: 0">Tier</a>
-                                                                                            </div>
-                                                                                            <div class="accordion-body collapse " id="namespace-612075965">
-                                                                                                <div class="accordion-inner">
-
-                                                                                                    <div class="accordion" style="margin-bottom: 0">
-                                                                                                        <div class="accordion-group">
-                                                                                                            <div class="accordion-heading">
-                                                                                                                <a class="accordion-toggle collapsed" data-target="#namespace-1410636267" data-toggle="collapse"></a>
-                                                                                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Tier.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
-                                                                                                            </div>
-                                                                                                            <div class="accordion-body collapse " id="namespace-1410636267">
-                                                                                                                <div class="accordion-inner">
-
-
-                                                                                                                    <ul>
-                                                                                                                        <li class="class">
-                                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Tier.Exception.NoShippingMethodBranchesBound.html">NoShippingMethodBranchesBound</a>
-                                                                                                                        </li>
-                                                                                                                        <li class="class">
-                                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Tier.Exception.NoShippingMethodBranchForCountry.html">NoShippingMethodBranchForCountry</a>
-                                                                                                                        </li>
-                                                                                                                    </ul>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-
-
-                                                                                                    <ul>
-                                                                                                        <li class="class">
-                                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Tier.Exception.html">Exception</a>
-                                                                                                        </li>
-                                                                                                    </ul>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-
-
-                                                                                    <ul>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Carrier.html">Carrier</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Country.html">Country</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.DoorToDoorTransitTime.html">DoorToDoorTransitTime</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.LazyCarrierInjectionAware.html">LazyCarrierInjectionAware</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.LazyShippingMethodBranchListInjection.html">LazyShippingMethodBranchListInjection</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.LazyShippingMethodInjectionAware.html">LazyShippingMethodInjectionAware</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html">LazyTierInjectionAware</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.ShippingMethod.html">ShippingMethod</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.ShippingMethodBranch.html">ShippingMethodBranch</a>
-                                                                                        </li>
-                                                                                        <li class="interface">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Tier.html">Tier</a>
-                                                                                        </li>
-                                                                                        <li class="class">
-                                                                                            <a href="../classes/AdamRocska.ShippingTier.Entity.Exception.html">Exception</a>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-
-                                                                    <ul>
-                                                                        <li class="class">
-                                                                            <a href="../classes/AdamRocska.ShippingTier.Exception.html">Exception</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <ul>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <ul>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-            <section class="row-fluid">
-                <div class="span10 offset2">
-                    <div class="row-fluid">
-                        <div class="span8 content class">
-                            <nav>
-                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.html">\AdamRocska\ShippingTier\Entity</a>
-                            </nav>
-                            <a class="pull-right btn" data-toggle="modal" href="#source-view" role="button"><i class="icon-code"></i></a>
-
-                            <h1>
-                                <small>\AdamRocska\ShippingTier\Entity</small>
-                                LazyTierInjectionAware
-                            </h1>
-                            <p><em>Represents an object that can consume the injection of a `Tier` entity as
-                                its dependency after instantiation.</em></p>
-
-
-                            <section id="summary">
-                                <h2>Summary</h2>
-                                <section class="row-fluid heading">
-                                    <section class="span6">
-                                        <a href="#methods">Methods</a>
-                                    </section>
-                                    <section class="span6">
-                                        <a href="#constants">Constants</a>
-                                    </section>
-                                </section>
-                                <section class="row-fluid public">
-                                    <section class="span6">
-                                        <a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html#method_setTier">setTier()</a><br/>
-                                        <a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html#method_hasTier">hasTier()</a><br/>
-                                    </section>
-                                    <section class="span6">
-                                        <em>No constants found</em>
-                                    </section>
-                                </section>
-                                <section class="row-fluid protected">
-                                    <section class="span6">
-                                        <em>No protected methods found</em>
-                                    </section>
-                                    <section class="span6">
-                                        <em>N/A</em>
-                                    </section>
-                                </section>
-                                <section class="row-fluid private">
-                                    <section class="span6">
-                                        <em>No private methods found</em>
-                                    </section>
-                                    <section class="span6">
-                                        <em>N/A</em>
-                                    </section>
-                                </section>
-                            </section>
-                        </div>
-                        <aside class="span4 detailsbar">
-                            <dl>
-                                <dt>File</dt>
-                                <dd>
-                                    <a href="../files/Entity.LazyTierInjectionAware.html">
-                                        <div class="path-wrapper">Entity/LazyTierInjectionAware.php</div>
-                                    </a>
-                                </dd>
-                                <dt>Package</dt>
-                                <dd>
-                                    <div class="namespace-wrapper">\AdamRocska\ShippingTier</div>
-                                </dd>
-
-                            </dl>
-                            <h2>Tags</h2>
-                            <table class="table table-condensed">
-                                <tr>
-                                    <th>version</th>
-                                    <td>
-                                        <p>Version 1.0.0</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>since</th>
-                                    <td>
-                                        <p>Version 1.0.0</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>author</th>
-                                    <td>
-                                        <p>Adam Rocska <a href="mailto:adam.rocska@adams.solutions">adam.rocska@adams.solutions</a>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </aside>
-                    </div>
-
-
-                    <div class="row-fluid">
-                        <div class="span8 content class">
-                            <h2>Methods</h2>
-                        </div>
-                        <aside class="span4 detailsbar"></aside>
-                    </div>
-
-                    <div class="row-fluid">
-                        <div class="span8 content class">
-                            <a class="anchor" id="method_setTier" name="method_setTier"></a>
-                            <article class="method">
-                                <h3 class="public ">setTier()</h3>
-                                <a class="pull-right btn" data-toggle="modal" href="#source-view" role="button" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                                <pre class="signature" style="margin-right: 54px;">setTier(\AdamRocska\ShippingTier\Entity\Tier  <span class="argument">$tier</span>) </pre>
-                                <p><em>Injects the provided `Tier`.</em></p>
-
-
-                                <h4>Parameters</h4>
-                                <table class="table table-condensed table-hover">
-                                    <tr>
-                                        <td><a href="../classes/AdamRocska.ShippingTier.Entity.Tier.html">\AdamRocska\ShippingTier\Entity\Tier</a>
-                                        </td>
-                                        <td>$tier</td>
-                                        <td></td>
-                                    </tr>
-                                </table>
-
-
-                            </article>
-                        </div>
-                        <aside class="span4 detailsbar">
-                            <h1><i class="icon-arrow-down"></i></h1>
-                            <dl>
-                                <dt>Inherited from</dt>
-                                <dd><a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html">
-                                    <div class="path-wrapper">\AdamRocska\ShippingTier\Entity\LazyTierInjectionAware
-                                    </div>
-                                </a></dd>
-                            </dl>
-                            <h2>Tags</h2>
-                            <table class="table table-condensed">
-                                <tr>
-                                    <th>
-                                        version
-                                    </th>
-                                    <td>
-                                        <p>Version 1.0.0</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        since
-                                    </th>
-                                    <td>
-                                        <p>Version 1.0.0</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        author
-                                    </th>
-                                    <td>
-                                        <p>Adam Rocska <a href="mailto:adam.rocska@adams.solutions">adam.rocska@adams.solutions</a>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </aside>
-                    </div>
-
-                    <div class="row-fluid">
-                        <div class="span8 content class">
-                            <a class="anchor" id="method_hasTier" name="method_hasTier"></a>
-                            <article class="method">
-                                <h3 class="public ">hasTier()</h3>
-                                <a class="pull-right btn" data-toggle="modal" href="#source-view" role="button" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                                <pre class="signature" style="margin-right: 54px;">hasTier() : boolean</pre>
-                                <p><em>Tells whether the current instance has a `Tier` injected.</em></p>
-                                <p><em>HINT : For its dependents it's useful for catch-able, or debug
-                                    assertions.</em></p>
-
-
-                                <h4>Returns</h4>
-                                boolean
-
-                            </article>
-                        </div>
-                        <aside class="span4 detailsbar">
-                            <h1><i class="icon-arrow-down"></i></h1>
-                            <dl>
-                                <dt>Inherited from</dt>
-                                <dd><a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html">
-                                    <div class="path-wrapper">\AdamRocska\ShippingTier\Entity\LazyTierInjectionAware
-                                    </div>
-                                </a></dd>
-                            </dl>
-                            <h2>Tags</h2>
-                            <table class="table table-condensed">
-                                <tr>
-                                    <th>
-                                        version
-                                    </th>
-                                    <td>
-                                        <p>Version 1.0.0</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        since
-                                    </th>
-                                    <td>
-                                        <p>Version 1.0.0</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        author
-                                    </th>
-                                    <td>
-                                        <p>Adam Rocska <a href="mailto:adam.rocska@adams.solutions">adam.rocska@adams.solutions</a>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </aside>
-                    </div>
-
-                </div>
-            </section>
-
-            <div aria-hidden="true" aria-labelledby="source-view-label" class="modal hide fade" id="source-view" role="dialog" tabindex="-1">
-                <div class="modal-header">
-                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
-                    <h3 id="source-view-label">LazyTierInjectionAware.php</h3>
-                </div>
-                <div class="modal-body">
-                    <pre class="language-php" data-src="../files/Entity/LazyTierInjectionAware.php.txt"></pre>
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Carrier.Exception.NoShippingMethod.html">NoShippingMethod</a></li>
+                                            </ul>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <footer class="row-fluid">
-                <section class="span10 offset2">
-                    <section class="row-fluid">
-                        <section class="span10 offset1">
-                            <section class="row-fluid footer-sections">
-                                <section class="span4">
-                                    <h1><i class="icon-code"></i></h1>
-                                    <div>
-                                        <ul>
-                                            <li><a href="../namespaces/AdamRocska.html">\AdamRocska</a></li>
-                                        </ul>
-                                    </div>
-                                </section>
-                                <section class="span4">
-                                    <h1><i class="icon-bar-chart"></i></h1>
-                                    <div>
-                                        <ul>
-                                            <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
-                                        </ul>
-                                    </div>
-                                </section>
-                                <section class="span4">
-                                    <h1><i class="icon-pushpin"></i></h1>
-                                    <div>
-                                        <ul>
-                                            <li><a href="../reports/errors.html">Errors</a></li>
-                                            <li><a href="../reports/markers.html">Markers</a></li>
-                                        </ul>
-                                    </div>
-                                </section>
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Carrier.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1665659190"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Runtime.html" style="margin-left: 30px; padding-left: 0">Runtime</a>
+            </div>
+            <div id="namespace-1665659190" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-540420151"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.html" style="margin-left: 30px; padding-left: 0">DoorToDoorTransitTime</a>
+            </div>
+            <div id="namespace-540420151" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-225371663"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
+            </div>
+            <div id="namespace-225371663" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.Exception.InvalidBoundaries.html">InvalidBoundaries</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Carrier.html">Carrier</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Country.html">Country</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.DoorToDoorTransitTime.html">DoorToDoorTransitTime</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.ShippingMethod.html">ShippingMethod</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.ShippingMethodBranch.html">ShippingMethodBranch</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.Tier.html">Tier</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Runtime.WildCardShippingMethodBranch.html">WildCardShippingMethodBranch</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2052516156"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Tier.html" style="margin-left: 30px; padding-left: 0">Tier</a>
+            </div>
+            <div id="namespace-2052516156" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1537725680"></a>
+                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.Tier.Exception.html" style="margin-left: 30px; padding-left: 0">Exception</a>
+            </div>
+            <div id="namespace-1537725680" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Tier.Exception.NoShippingMethodBranchesBound.html">NoShippingMethodBranchesBound</a></li>
+                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Tier.Exception.NoShippingMethodBranchForCountry.html">NoShippingMethodBranchForCountry</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Tier.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.Carrier.html">Carrier</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.Country.html">Country</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.DoorToDoorTransitTime.html">DoorToDoorTransitTime</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.LazyCarrierInjectionAware.html">LazyCarrierInjectionAware</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.LazyShippingMethodBranchListInjection.html">LazyShippingMethodBranchListInjection</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.LazyShippingMethodInjectionAware.html">LazyShippingMethodInjectionAware</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html">LazyTierInjectionAware</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.ShippingMethod.html">ShippingMethod</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.ShippingMethodBranch.html">ShippingMethodBranch</a></li>
+                                                    <li class="interface"><a href="../classes/AdamRocska.ShippingTier.Entity.Tier.html">Tier</a></li>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Entity.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AdamRocska.ShippingTier.Exception.html">Exception</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/AdamRocska.ShippingTier.Entity.html">\AdamRocska\ShippingTier\Entity</a>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\AdamRocska\ShippingTier\Entity</small>LazyTierInjectionAware</h1>
+                    <p><em>Represents an object that can consume the injection of a `Tier` entity as
+its dependency after instantiation.</em></p>
+                    
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span6">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span6">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span6">
+                                                                    <a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html#method_setTier">setTier()</a><br />
+                                                                    <a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html#method_hasTier">hasTier()</a><br />
+                                                            </section>
+                            <section class="span6">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span6">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span6">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span6">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span6">
+                                <em>N/A</em>
                             </section>
                         </section>
                     </section>
-                    <section class="row-fluid">
-                        <section class="span10 offset1">
-                            <hr/>
-                            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                            on September 24th, 2019 at 00:05.
+                </div>
+                <aside class="span4 detailsbar">
+                                        <dl>
+                        <dt>File</dt>
+                            <dd>
+                                <a href="../files/Entity.LazyTierInjectionAware.html"><div class="path-wrapper">Entity/LazyTierInjectionAware.php</div></a>
+                            </dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\AdamRocska\ShippingTier</div></dd>
+                                                
+                                            </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>version</th>
+                            <td>
+                                                                                                        <p>Version 1.0.0</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>since</th>
+                            <td>
+                                                                                                        <p>Version 1.0.0</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>author</th>
+                            <td>
+                                                                                                        <p>Adam Rocska <a href="mailto:adam.rocska@adams.solutions">adam.rocska@adams.solutions</a></p>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+            
+                        <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Methods</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTier" name="method_setTier" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">setTier()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTier(\AdamRocska\ShippingTier\Entity\Tier  <span class="argument">$tier</span>) </pre>
+                <p><em>Injects the provided `Tier`.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/AdamRocska.ShippingTier.Entity.Tier.html">\AdamRocska\ShippingTier\Entity\Tier</a></td>
+                                <td>$tier </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html"><div class="path-wrapper">\AdamRocska\ShippingTier\Entity\LazyTierInjectionAware</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            version
+                        </th>
+                        <td>
+                                                                                            <p>Version 1.0.0</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                                                            <p>Version 1.0.0</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Adam Rocska <a href="mailto:adam.rocska@adams.solutions">adam.rocska@adams.solutions</a></p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasTier" name="method_hasTier" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hasTier()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasTier() : boolean</pre>
+                <p><em>Tells whether the current instance has a `Tier` injected.</em></p>
+                <p><em>HINT : For its dependents it's useful for catch-able, or debug
+assertions.</em></p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/AdamRocska.ShippingTier.Entity.LazyTierInjectionAware.html"><div class="path-wrapper">\AdamRocska\ShippingTier\Entity\LazyTierInjectionAware</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            version
+                        </th>
+                        <td>
+                                                                                            <p>Version 1.0.0</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                                                            <p>Version 1.0.0</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Adam Rocska <a href="mailto:adam.rocska@adams.solutions">adam.rocska@adams.solutions</a></p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">LazyTierInjectionAware.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Entity/LazyTierInjectionAware.php.txt" class="language-php"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/AdamRocska.html">\AdamRocska</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
                         </section>
                     </section>
                 </section>
-            </footer>
-        </div>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on September 24th, 2019 at 00:12.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
 
-    </body>
+</body>
 </html>
