@@ -6,3 +6,4 @@ artifact
 sandbox.php
 docs/api/phpdoc-cache-*
 .htaccess
+composer.lock
