@@ -69,8 +69,8 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      *
-     * @param string $label
-     * @param string $identifier
+     * @param string $identifier The machine identifier of the tier.
+     * @param string $label      The human comprehensible label of the tier.
      */
     public function __construct(string $identifier, string $label)
     {
@@ -150,7 +150,14 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
             }
         }
 
-        $this->assertShippingMethodFoundForCountry($country, $bestBranch);
+        if (is_null($bestBranch)) {
+            $exceptionMessage = "No shipping method found for country "
+                                . $country->getLabel()
+                                . " of ISO code "
+                                . $country->getIsoCode()
+                                . ".";
+            throw new NoShippingMethodBranchForCountry($exceptionMessage);
+        }
         return $bestBranch;
     }
 
@@ -193,8 +200,12 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      *
-     * @param DoorToDoorTransitTime $best
-     * @param DoorToDoorTransitTime $current
+     * @param DoorToDoorTransitTime $current The `DoorToDoorTransitTime` of a
+     *                                       competing shipping method branch.
+     * @param DoorToDoorTransitTime $best    The `DoorToDoorTransitTime` of the
+     *                                       shipping method branch considered
+     *                                       as the fastest at the time of
+     *                                       comparison.
      *
      * @return bool
      */
@@ -213,6 +224,8 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
     }
 
     /**
+     * Asserts, that the current tier object has shipping method branches bound.
+     *
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
@@ -222,30 +235,6 @@ class Tier implements TierEntity, LazyShippingMethodBranchListInjection
     {
         if (count($this->shippingMethodBranches) === 0) {
             throw new NoShippingMethodBranchesBound("There are no shipping method branches bound to this tier.");
-        }
-    }
-
-    /**
-     * @version Version 1.0.0
-     * @since   Version 1.0.0
-     * @author  Adam Rocska <adam.rocska@adams.solutions>
-     *
-     * @param ShippingMethodBranch|null $bestBranch
-     * @param Country                   $country
-     *
-     * @throws NoShippingMethodBranchForCountry
-     */
-    private function assertShippingMethodFoundForCountry(
-        Country $country,
-        ?ShippingMethodBranch $bestBranch
-    ): void {
-        if (is_null($bestBranch)) {
-            $exceptionMessage = "No shipping method found for country "
-                                . $country->getLabel()
-                                . " of ISO code "
-                                . $country->getIsoCode()
-                                . ".";
-            throw new NoShippingMethodBranchForCountry($exceptionMessage);
         }
     }
 
