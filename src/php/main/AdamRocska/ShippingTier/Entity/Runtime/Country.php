@@ -72,7 +72,6 @@ class Country implements CountryEntity
      *                   considered to be labels.
      *
      * @return Country[]
-     * @example example/php/AdamRocska/ShippingTier/Entity/Runtime/country-creation-from-map.php
      *
      */
     public static function createFromMap(array $map): iterable
