@@ -4,6 +4,8 @@
 namespace AdamRocska\ShippingTier\Entity;
 
 
+use AdamRocska\ShippingTier\Entity\Carrier\Exception\NoShippingMethod;
+
 /**
  * Represents a shipping carrier.
  *
@@ -44,4 +46,21 @@ interface Carrier
      * @return ShippingMethod[]
      */
     public function getShippingMethods(): iterable;
+
+    /**
+     * Returns a shipping method who's identifier matches the given one.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param string $identifier
+     *
+     * @return ShippingMethod
+     * @throws NoShippingMethod Throws a `NoShippingMethod` when no shipping
+     *                          method was matched against the received
+     *                          identifier.
+     */
+    public function getShippingMethodByIdentifier(string $identifier
+    ): ShippingMethod;
 }

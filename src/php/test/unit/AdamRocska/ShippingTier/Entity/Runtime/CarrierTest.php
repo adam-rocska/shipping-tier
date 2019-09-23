@@ -2,6 +2,7 @@
 
 namespace AdamRocska\ShippingTier\Entity\Runtime;
 
+use AdamRocska\ShippingTier\Entity\Carrier\Exception\NoShippingMethod;
 use AdamRocska\ShippingTier\Entity\LazyCarrierInjectionAware;
 use AdamRocska\ShippingTier\Entity\ShippingMethod;
 use PHPUnit\Framework\MockObject\Matcher\InvokedCount as InvokedCountMatcher;
@@ -115,6 +116,64 @@ class CarrierTest extends TestCase
         }
     }
 
+    public function testGetShippingMethodByIdentifier_throwsExceptionIfNoMethodsBound(
+    ): void
+    {
+        $carrier = new Carrier("test", "test", []);
+        try {
+            $testIdentifier = "test identifier";
+            $carrier->getShippingMethodByIdentifier($testIdentifier);
+            $this->fail("Expected to throw exception.");
+        } catch (NoShippingMethod $exception) {
+            $this->assertEquals(
+                "No shipping method found by identifier \"$testIdentifier\"",
+                $exception->getMessage(),
+                "Expected an expressive exception message."
+            );
+        }
+    }
+
+    public function testGetShippingMethodByIdentifier_throwsExceptionIfNotfound(
+    ): void
+    {
+        $carrier = new Carrier("test", "test", [
+            $this->createMockCarrierAwareShippingMethod("test"),
+            $this->createMockCarrierAwareShippingMethod("test method")
+        ]);
+        try {
+            $testIdentifier = "test identifier";
+            $carrier->getShippingMethodByIdentifier($testIdentifier);
+            $this->fail("Expected to throw exception.");
+        } catch (NoShippingMethod $exception) {
+            $this->assertEquals(
+                "No shipping method found by identifier \"$testIdentifier\"",
+                $exception->getMessage(),
+                "Expected an expressive exception message."
+            );
+        }
+    }
+
+    /**
+     * @throws NoShippingMethod
+     */
+    public function testGetShippingMethodByIdentifier(): void
+    {
+        $testIdentifier = "test identifier";
+
+        $stub = $this->createMockCarrierAwareShippingMethod($testIdentifier);
+
+        $carrier = new Carrier("test", "test", [
+            $this->createMockCarrierAwareShippingMethod("test"),
+            $this->createMockCarrierAwareShippingMethod("test method"),
+            $stub
+        ]);
+        $this->assertSame(
+            $stub,
+            $carrier->getShippingMethodByIdentifier($testIdentifier),
+            "Expected to return the shipping method who's identifier is \"$testIdentifier\""
+        );
+    }
+
     private function createStubShippingMethods(
         int $numberOfShippingMethods
     ): iterable {
@@ -126,14 +185,21 @@ class CarrierTest extends TestCase
     }
 
     /**
+     * @param string $identifier
+     *
      * @return MockObject|ShippingMethod|LazyCarrierInjectionAware
      */
-    private function createMockCarrierAwareShippingMethod(): ShippingMethod
-    {
-        return $this->createMock([
-                                     ShippingMethod::class,
-                                     LazyCarrierInjectionAware::class
-                                 ]);
+    private function createMockCarrierAwareShippingMethod(
+        string $identifier = ""
+    ): ShippingMethod {
+        $mockShippingMethod = $this->createMock([
+                                                    ShippingMethod::class,
+                                                    LazyCarrierInjectionAware::class
+                                                ]);
+        $mockShippingMethod
+            ->method("getIdentifier")
+            ->willReturn($identifier);
+        return $mockShippingMethod;
     }
 
 }

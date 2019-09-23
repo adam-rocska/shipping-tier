@@ -5,6 +5,7 @@ namespace AdamRocska\ShippingTier\Entity\Runtime;
 
 
 use AdamRocska\ShippingTier\Entity\Carrier as CarrierEntity;
+use AdamRocska\ShippingTier\Entity\Carrier\Exception\NoShippingMethod;
 use AdamRocska\ShippingTier\Entity\LazyCarrierInjectionAware;
 use AdamRocska\ShippingTier\Entity\ShippingMethod;
 
@@ -115,6 +116,33 @@ class Carrier implements CarrierEntity
     public function getShippingMethods(): array
     {
         return $this->shippingMethods;
+    }
+
+    /**
+     * Returns a shipping method who's identifier matches the given one.
+     *
+     * @version Version 1.0.0
+     * @since   Version 1.0.0
+     * @author  Adam Rocska <adam.rocska@adams.solutions>
+     *
+     * @param string $identifier
+     *
+     * @return ShippingMethod
+     * @throws NoShippingMethod Throws a `NoShippingMethod` when no shipping
+     *                          method was matched against the received
+     *                          identifier.
+     */
+    public function getShippingMethodByIdentifier(string $identifier
+    ): ShippingMethod {
+        foreach ($this->shippingMethods as $shippingMethod) {
+            if ($shippingMethod->getIdentifier() === $identifier) {
+                return $shippingMethod;
+            }
+        }
+        $exceptionMessage = "No shipping method found by identifier \"";
+        $exceptionMessage .= $identifier;
+        $exceptionMessage .= "\"";
+        throw new NoShippingMethod($exceptionMessage);
     }
 
 }
