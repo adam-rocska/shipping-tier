@@ -5,3 +5,4 @@ artifact
 # used for local experiments
 sandbox.php
 docs/api/phpdoc-cache-*
+.htaccess
