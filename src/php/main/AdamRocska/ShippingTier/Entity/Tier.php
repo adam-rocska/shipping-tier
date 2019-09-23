@@ -7,6 +7,15 @@ namespace AdamRocska\ShippingTier\Entity;
 use AdamRocska\ShippingTier\Entity\Tier\Exception\NoShippingMethodBranchesBound;
 use AdamRocska\ShippingTier\Entity\Tier\Exception\NoShippingMethodBranchForCountry;
 
+/**
+ * Represents a set of shipping method branches sorted in the same tier /
+ * category.
+ *
+ * @package AdamRocska\ShippingTier\Entity
+ * @version Version 1.0.0
+ * @since   Version 1.0.0
+ * @author  Adam Rocska <adam.rocska@adams.solutions>
+ */
 interface Tier
 {
 

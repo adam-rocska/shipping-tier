@@ -19,6 +19,9 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
 {
 
     /**
+     * The minimum amount of days it takes for a shipment to arrive door to
+     * door.
+     *
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
@@ -27,6 +30,9 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
     private $minimumDays;
 
     /**
+     * The maximum amount of days it takes for a shipment to arrive door to
+     * door.
+     *
      * @version Version 1.0.0
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
@@ -41,9 +47,9 @@ class DoorToDoorTransitTime implements DoorToDoorTransitTimeEntity
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      *
-     * @param int $maximumDays The minimum amount of days it takes for a
+     * @param int $minimumDays The minimum amount of days it takes for a
      *                         shipment to arrive door to door.
-     * @param int $minimumDays The maximum amount of days it takes for a
+     * @param int $maximumDays The maximum amount of days it takes for a
      *                         shipment to arrive door to door.
      *
      * @throws InvalidBoundaries

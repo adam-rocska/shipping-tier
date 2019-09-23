@@ -45,10 +45,10 @@ class Country implements CountryEntity
      * @since   Version 1.0.0
      * @author  Adam Rocska <adam.rocska@adams.solutions>
      *
+     * @param string $isoCode The ISO code of the represented country object.
      * @param string $label   The human readable representation of the
      *                        represented country's name.
      *                        This value may be localized.
-     * @param string $isoCode The ISO code of the represented country object.
      */
     public function __construct(string $isoCode, string $label)
     {

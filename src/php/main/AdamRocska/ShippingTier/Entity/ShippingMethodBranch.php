@@ -4,6 +4,16 @@
 namespace AdamRocska\ShippingTier\Entity;
 
 
+/**
+ * Represents a branch of a shipping method.
+ * A shipping method branch is a cluster of countries supported by a given
+ * shipping method, grouped by transit time, and tier.
+ *
+ * @package AdamRocska\ShippingTier\Entity
+ * @version Version 1.0.0
+ * @since   Version 1.0.0
+ * @author  Adam Rocska <adam.rocska@adams.solutions>
+ */
 interface ShippingMethodBranch
 {
     /**
