@@ -18,7 +18,7 @@
         <target>docs/api</target>
     </transformer>
     <transformations>
-        <template name="old-ocean"/>
+        <template name="clean"/>
     </transformations>
     <files>
         <directory>src/php/main</directory>
