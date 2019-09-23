@@ -2,6 +2,10 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adam-rocska_shipping-tier&metric=alert_status)](https://sonarcloud.io/dashboard?id=adam-rocska_shipping-tier)
 
+# Docs
+
+* [API Docs, using PHPDocumentor2. Ugly, but better than nothing if needed.](https://adam-rocska.github.io/shipping-tier/api/)
+
 # Problem Statement
 
 Given a set of time intervals in the form of (min, max) with unknown standard deviation, select the one interval, that's the fastest, with the highest probability of arriving the soonest.
